@@ -46,7 +46,7 @@ function escapeHtml(value) {
 }
 
 function sceneAt(ms) {
-  return data.scenes.find((scene) => ms >= scene.startMs && ms < scene.endMs) || data.scenes.at(-1);
+  return data.scenes.find((scene) => ms >= scene.startMs && ms < scene.endMs) || null;
 }
 
 function render(ms) {

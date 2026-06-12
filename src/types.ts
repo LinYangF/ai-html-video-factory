@@ -15,6 +15,16 @@ export type Scene = SubtitleCue & {
   accent?: string;
 };
 
+export type VisualScene = {
+  title: string;
+  body?: string;
+  kind?: SceneKind;
+  label?: string;
+  startMs?: number;
+  endMs?: number;
+  durationSec?: number;
+};
+
 export type VideoStyle = {
   title: string;
   subtitle: string;
@@ -51,6 +61,7 @@ export type ProjectPaths = {
   framesDir: string;
   templateDir: string;
   subtitlesPath: string;
+  scenesPath: string;
   stylePath: string;
   voicePath: string;
   previewPath: string;

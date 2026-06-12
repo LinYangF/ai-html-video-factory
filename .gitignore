@@ -4,8 +4,9 @@ output/
 dist/
 
 input/voice.mp3
-lessons/*/audio.wav
-lessons/*/voice.mp3
+input/scenes.json
+lessons/*/*.wav
+lessons/*/*.mp3
 lessons/*/output/
 
 .DS_Store

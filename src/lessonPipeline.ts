@@ -25,6 +25,7 @@ type PipelinePaths = {
   stylePath: string;
   activeVoicePath: string;
   activeSubtitlesPath: string;
+  activeScenesPath: string;
   activeStylePath: string;
   previewPath: string;
   videoPath: string;
@@ -219,6 +220,14 @@ async function activateLesson(paths: PipelinePaths): Promise<void> {
   if (existsSync(paths.stylePath)) {
     await copyFile(paths.stylePath, paths.activeStylePath);
     console.log(`Activated style: ${relative(paths.stylePath)} -> ${relative(paths.activeStylePath)}`);
+  }
+
+  const lessonScenesPath = path.join(paths.lessonDir, "scenes.json");
+  if (existsSync(lessonScenesPath)) {
+    await copyFile(lessonScenesPath, paths.activeScenesPath);
+    console.log(`Activated scenes: ${relative(lessonScenesPath)} -> ${relative(paths.activeScenesPath)}`);
+  } else {
+    await rm(paths.activeScenesPath, { force: true });
   }
 
   console.log(`Activated subtitles: ${relative(paths.subtitlesPath)} -> ${relative(paths.activeSubtitlesPath)}`);
@@ -420,6 +429,7 @@ function getPaths(baseDir: string, slug: string): PipelinePaths {
     stylePath: process.env.LESSON_STYLE ?? path.join(lessonDir, "style.json"),
     activeVoicePath: path.join(baseDir, "input", "voice.mp3"),
     activeSubtitlesPath: path.join(baseDir, "input", "subtitles.srt"),
+    activeScenesPath: path.join(baseDir, "input", "scenes.json"),
     activeStylePath: path.join(baseDir, "input", "style.json"),
     previewPath: path.join(currentOutputDir, "preview.html"),
     videoPath: path.join(currentOutputDir, "video.mp4"),

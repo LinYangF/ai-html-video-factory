@@ -1,8 +1,11 @@
-import type { Scene, SceneKind, SubtitleCue, Timeline, VideoStyle } from "./types.ts";
+import type { Scene, SceneKind, SubtitleCue, Timeline, VideoStyle, VisualScene } from "./types.ts";
 
-export function buildTimeline(cues: SubtitleCue[], style: VideoStyle): Timeline {
-  const scenes = cues.map((cue, position) => buildScene(cue, position, cues.length));
+export function buildTimeline(cues: SubtitleCue[], style: VideoStyle, visualScenes: VisualScene[] = []): Timeline {
   const durationMs = Math.max(...cues.map((cue) => cue.endMs)) + 500;
+  const scenes =
+    visualScenes.length > 0
+      ? buildVisualScenes(visualScenes, durationMs)
+      : cues.map((cue, position) => buildScene(cue, position, cues.length));
 
   return {
     title: style.title,
@@ -14,6 +17,38 @@ export function buildTimeline(cues: SubtitleCue[], style: VideoStyle): Timeline 
     scenes,
     style,
   };
+}
+
+function buildVisualScenes(visualScenes: VisualScene[], durationMs: number): Scene[] {
+  const weightedDurationMs = visualScenes.reduce((total, scene) => total + (scene.durationSec ?? 0) * 1000, 0);
+  const useWeights = weightedDurationMs > 0;
+  let cursor = 0;
+
+  return visualScenes.map((visual, position) => {
+    const startMs = visual.startMs ?? cursor;
+    const endMs =
+      visual.endMs ??
+      (position === visualScenes.length - 1
+        ? durationMs
+        : useWeights
+          ? cursor + (((visual.durationSec ?? 1) * 1000) / weightedDurationMs) * durationMs
+          : Math.round(((position + 1) / visualScenes.length) * durationMs));
+    cursor = endMs;
+
+    const text = [visual.title, visual.body].filter(Boolean).join("。");
+    const kind = visual.kind ?? (position === 0 ? "title" : position === visualScenes.length - 1 ? "summary" : "step");
+    return {
+      index: position + 1,
+      startMs,
+      endMs,
+      durationMs: endMs - startMs,
+      text,
+      kind,
+      label: visual.label ?? labelFor(kind, position),
+      headline: visual.title,
+      accent: visual.body,
+    };
+  });
 }
 
 function buildScene(cue: SubtitleCue, position: number, total: number): Scene {

@@ -177,6 +177,30 @@ lessons/chapter-name/voice.mp3
 lessons/chapter-name/subtitles.srt
 ```
 
+字幕只负责时间轴和总时长，不建议直接拿字幕内容生成画面页。
+
+如果要生成演示动画页面，需要准备画面脚本：
+
+```text
+lessons/chapter-name/scenes.json
+```
+
+示例：
+
+```json
+[
+  {
+    "title": "金融市场里，谁在赚钱？",
+    "body": "同样都在金融行业，分工其实很不一样",
+    "kind": "title",
+    "label": "导入问题",
+    "durationSec": 24
+  }
+]
+```
+
+`durationSec` 用来控制每页画面的大致占比。系统会按整段字幕总时长自动缩放，不要求这些秒数精确等于音频时长。
+
 质量检查：
 
 - 专有名词是否正确，例如 Buy Side、Sell Side、alpha。
@@ -218,7 +242,9 @@ lessons/chapter-name/lesson.md
   -> lessons/chapter-name/audio.wav
   -> lessons/chapter-name/voice.mp3
   -> lessons/chapter-name/subtitles.srt
+  -> lessons/chapter-name/scenes.json
   -> input/voice.mp3 + input/subtitles.srt
+  -> input/scenes.json
   -> output/current/preview.html
   -> output/current/video.mp4
   -> lessons/chapter-name/output/preview.html

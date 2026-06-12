@@ -1,11 +1,12 @@
 import { mkdir, readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildTimeline } from "./buildTimeline.ts";
 import { generateHtml } from "./generateHtml.ts";
 import { parseSrt } from "./parseSrt.ts";
 import { renderVideo } from "./renderVideo.ts";
-import type { ProjectPaths, Timeline, VideoStyle } from "./types.ts";
+import type { ProjectPaths, Timeline, VideoStyle, VisualScene } from "./types.ts";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -32,9 +33,13 @@ export async function buildHtml(paths = projectPaths(rootDir)): Promise<Timeline
   await mkdir(paths.outputDir, { recursive: true });
   await mkdir(paths.framesDir, { recursive: true });
 
-  const [srt, style] = await Promise.all([readFile(paths.subtitlesPath, "utf8"), loadStyle(paths)]);
+  const [srt, style, visualScenes] = await Promise.all([
+    readFile(paths.subtitlesPath, "utf8"),
+    loadStyle(paths),
+    loadVisualScenes(paths),
+  ]);
   const cues = parseSrt(srt);
-  const timeline = buildTimeline(cues, style);
+  const timeline = buildTimeline(cues, style, visualScenes);
   await generateHtml(timeline, paths.templateDir, paths.previewPath);
   console.log(`Preview written to ${paths.previewPath}`);
   return timeline;
@@ -49,11 +54,24 @@ function projectPaths(baseDir: string): ProjectPaths {
     framesDir: path.join(outputDir, "frames"),
     templateDir: path.join(baseDir, "templates"),
     subtitlesPath: path.join(baseDir, "input", "subtitles.srt"),
+    scenesPath: path.join(baseDir, "input", "scenes.json"),
     stylePath: path.join(baseDir, "input", "style.json"),
     voicePath: path.join(baseDir, "input", "voice.mp3"),
     previewPath: path.join(outputDir, "preview.html"),
     videoPath: path.join(outputDir, "video.mp4"),
   };
+}
+
+async function loadVisualScenes(paths: ProjectPaths): Promise<VisualScene[]> {
+  if (!existsSync(paths.scenesPath)) {
+    return [];
+  }
+  const raw = await readFile(paths.scenesPath, "utf8");
+  const parsed = JSON.parse(raw) as VisualScene[];
+  if (!Array.isArray(parsed)) {
+    throw new Error(`Visual scenes file must be an array: ${paths.scenesPath}`);
+  }
+  return parsed.filter((scene) => scene.title?.trim());
 }
 
 async function loadStyle(paths: ProjectPaths): Promise<VideoStyle> {

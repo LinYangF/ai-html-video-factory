@@ -14,6 +14,7 @@ lessons/
     audio.wav
     voice.mp3
     subtitles.srt
+    scenes.json
     output/
 ```
 

@@ -125,10 +125,11 @@ input/
   script.md        # 原始文案，可选
   voice.mp3        # 解说音频，可选；不存在时自动生成静音音轨
   subtitles.srt    # 必需，带时间戳的字幕
+  scenes.json      # 可选，控制画面页；不存在时会退回到按字幕生成画面
   style.json       # 可选，控制主题、字体、颜色、尺寸和帧率
 ```
 
-`subtitles.srt` 是最关键的文件。示例：
+`subtitles.srt` 只负责时间轴和总时长。示例：
 
 ```srt
 1
@@ -139,6 +140,28 @@ input/
 00:00:02,500 --> 00:00:05,200
 都不是用传统剪辑软件做的
 ```
+
+如果你想要真正的演示动画页面，而不是每条字幕生成一页，需要在 lesson 目录里提供：
+
+```text
+lessons/{lesson-slug}/scenes.json
+```
+
+示例：
+
+```json
+[
+  {
+    "title": "金融市场里，谁在赚钱？",
+    "body": "同样都在金融行业，分工其实很不一样",
+    "kind": "title",
+    "label": "导入问题",
+    "durationSec": 24
+  }
+]
+```
+
+执行 `npm run lesson:activate -- {lesson-slug}` 时，`scenes.json` 会被复制到 `input/scenes.json` 参与渲染。
 
 ## 命令说明
 

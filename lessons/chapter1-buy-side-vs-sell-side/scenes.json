@@ -1,0 +1,170 @@
+[
+  {
+    "title": "金融市场里，谁在赚钱？",
+    "body": "同样都在金融行业，分工其实很不一样",
+    "kind": "title",
+    "label": "导入问题",
+    "durationSec": 24
+  },
+  {
+    "title": "两个核心角色",
+    "body": "买方负责投资赚钱，卖方负责服务客户赚钱",
+    "kind": "quote",
+    "label": "核心概念",
+    "durationSec": 26
+  },
+  {
+    "title": "买方 Buy Side",
+    "body": "拿自己的钱，或客户的钱，去做投资决策",
+    "kind": "step",
+    "label": "概念 01",
+    "durationSec": 24
+  },
+  {
+    "title": "卖方 Sell Side",
+    "body": "提供交易、融资、研究、报价等服务",
+    "kind": "step",
+    "label": "概念 02",
+    "durationSec": 24
+  },
+  {
+    "title": "用菜市场理解",
+    "body": "买方像买菜的人，卖方像摊贩和批发商",
+    "kind": "quote",
+    "label": "生活类比",
+    "durationSec": 34
+  },
+  {
+    "title": "放回真实市场",
+    "body": "买方包括对冲基金、资管、自营交易和做市商",
+    "kind": "step",
+    "label": "市场角色",
+    "durationSec": 30
+  },
+  {
+    "title": "小李的第一次投资",
+    "body": "券商赚佣金，小李赚投资收益",
+    "kind": "quote",
+    "label": "故事示例",
+    "durationSec": 38
+  },
+  {
+    "title": "大型买方机构",
+    "body": "不是十万元，而是几亿、几十亿甚至几百亿资金",
+    "kind": "step",
+    "label": "规模差异",
+    "durationSec": 28
+  },
+  {
+    "title": "买方的核心逻辑",
+    "body": "拿到资金，做研究和交易，让资金增值",
+    "kind": "tool",
+    "label": "投资工厂",
+    "durationSec": 34
+  },
+  {
+    "title": "什么是 Alpha",
+    "body": "超过普通市场表现的那部分收益",
+    "kind": "quote",
+    "label": "关键词",
+    "durationSec": 24
+  },
+  {
+    "title": "买方用结果说话",
+    "body": "赚钱有管理费和提成，亏钱可能被赎回",
+    "kind": "step",
+    "label": "结果导向",
+    "durationSec": 34
+  },
+  {
+    "title": "A 公司与 B 公司",
+    "body": "风险管理决定机构能否穿越危机",
+    "kind": "quote",
+    "label": "危机故事",
+    "durationSec": 42
+  },
+  {
+    "title": "四类买方机构",
+    "body": "对冲基金、资产管理、自营交易、做市商",
+    "kind": "tool",
+    "label": "分类总览",
+    "durationSec": 30
+  },
+  {
+    "title": "对冲基金",
+    "body": "像特种部队，目标是寻找超额收益",
+    "kind": "step",
+    "label": "类型 01",
+    "durationSec": 24
+  },
+  {
+    "title": "资产管理公司",
+    "body": "像马拉松选手，长期稳健管理客户资产",
+    "kind": "step",
+    "label": "类型 02",
+    "durationSec": 24
+  },
+  {
+    "title": "自营交易公司",
+    "body": "用自己的钱交易，靠概率、速度和纪律赚钱",
+    "kind": "step",
+    "label": "类型 03",
+    "durationSec": 24
+  },
+  {
+    "title": "做市商",
+    "body": "持续报买价和卖价，赚每一笔微小价差",
+    "kind": "step",
+    "label": "类型 04",
+    "durationSec": 26
+  },
+  {
+    "title": "为什么量化集中在买方？",
+    "body": "投资决策越来越依赖数据、模型和编程",
+    "kind": "quote",
+    "label": "核心原因",
+    "durationSec": 36
+  },
+  {
+    "title": "买方量化岗位",
+    "body": "研究、开发、交易、风控、数据科学",
+    "kind": "tool",
+    "label": "岗位地图",
+    "durationSec": 34
+  },
+  {
+    "title": "卖方也有量化",
+    "body": "但更多服务定价、建模、融资和客户风险分析",
+    "kind": "step",
+    "label": "对比理解",
+    "durationSec": 30
+  },
+  {
+    "title": "两个量化分析师",
+    "body": "都用数学和编程，但目标和收入来源不同",
+    "kind": "quote",
+    "label": "对话示例",
+    "durationSec": 34
+  },
+  {
+    "title": "本章记住四件事",
+    "body": "买方投资，卖方服务；买方结果导向；四类机构；量化依赖数据模型代码",
+    "kind": "summary",
+    "label": "总结提升",
+    "durationSec": 44
+  },
+  {
+    "title": "课后思考",
+    "body": "稳定跑赢、买方公司、AI 对量化岗位的影响",
+    "kind": "summary",
+    "label": "思考题",
+    "durationSec": 28
+  },
+  {
+    "title": "下一章：对冲基金",
+    "body": "它们如何用不同策略猎取 alpha",
+    "kind": "summary",
+    "label": "下章预告",
+    "durationSec": 20
+  }
+]
