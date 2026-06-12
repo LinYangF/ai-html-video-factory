@@ -146,7 +146,11 @@ function run(command: string, args: string[]): void {
 }
 
 function frameCount(timeline: Timeline): number {
-  return Math.max(1, Math.ceil((timeline.durationMs / 1000) * timeline.fps));
+  const requestedSeconds = Number(process.env.RENDER_MAX_SECONDS ?? "");
+  const durationMs = Number.isFinite(requestedSeconds) && requestedSeconds > 0
+    ? Math.min(timeline.durationMs, requestedSeconds * 1000)
+    : timeline.durationMs;
+  return Math.max(1, Math.ceil((durationMs / 1000) * timeline.fps));
 }
 
 function messageOf(error: unknown): string {

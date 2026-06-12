@@ -237,10 +237,11 @@ async function renderLesson(paths: PipelinePaths): Promise<void> {
   await activateLesson(paths);
   await runCommand(process.execPath, ["src/index.ts", "render"]);
   await mkdir(paths.lessonOutputDir, { recursive: true });
+  const videoOutputName = process.env.LESSON_OUTPUT_NAME ?? "video.mp4";
   await copyFile(paths.previewPath, path.join(paths.lessonOutputDir, "preview.html"));
-  await copyFile(paths.videoPath, path.join(paths.lessonOutputDir, "video.mp4"));
+  await copyFile(paths.videoPath, path.join(paths.lessonOutputDir, videoOutputName));
   console.log(`Lesson preview written to ${path.join(paths.lessonOutputDir, "preview.html")}`);
-  console.log(`Lesson video written to ${path.join(paths.lessonOutputDir, "video.mp4")}`);
+  console.log(`Lesson video written to ${path.join(paths.lessonOutputDir, videoOutputName)}`);
 }
 
 async function callLlm(messages: ChatMessage[]): Promise<string> {

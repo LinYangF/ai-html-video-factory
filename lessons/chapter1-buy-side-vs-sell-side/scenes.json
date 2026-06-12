@@ -4,48 +4,55 @@
     "body": "同样都在金融行业，分工其实很不一样",
     "kind": "title",
     "label": "导入问题",
-    "durationSec": 24
+    "startMs": 0,
+    "endMs": 18966
   },
   {
     "title": "两个核心角色",
     "body": "买方负责投资赚钱，卖方负责服务客户赚钱",
     "kind": "quote",
     "label": "核心概念",
-    "durationSec": 26
+    "startMs": 18966,
+    "endMs": 24400
   },
   {
     "title": "买方 Buy Side",
     "body": "拿自己的钱，或客户的钱，去做投资决策",
     "kind": "step",
     "label": "概念 01",
-    "durationSec": 24
+    "startMs": 24400,
+    "endMs": 42933
   },
   {
     "title": "卖方 Sell Side",
     "body": "提供交易、融资、研究、报价等服务",
     "kind": "step",
     "label": "概念 02",
-    "durationSec": 24
+    "startMs": 42933,
+    "endMs": 65633
   },
   {
     "title": "用菜市场理解",
     "body": "买方像买菜的人，卖方像摊贩和批发商",
     "kind": "quote",
     "label": "生活类比",
-    "durationSec": 34
+    "startMs": 65633,
+    "endMs": 93233
   },
   {
     "title": "放回真实市场",
     "body": "买方包括对冲基金、资管、自营交易和做市商",
     "kind": "step",
     "label": "市场角色",
-    "durationSec": 30
+    "startMs": 93233,
+    "endMs": 118100
   },
   {
     "title": "小李的第一次投资",
     "body": "券商赚佣金，小李赚投资收益",
     "kind": "quote",
     "label": "故事示例",
+    "startMs": 118100,
     "durationSec": 38
   },
   {
