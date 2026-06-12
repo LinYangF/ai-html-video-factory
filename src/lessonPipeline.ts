@@ -21,7 +21,6 @@ type PipelinePaths = {
   fullTextPath: string;
   wavPath: string;
   mp3Path: string;
-  whisperPath: string;
   subtitlesPath: string;
   stylePath: string;
   activeVoicePath: string;
@@ -416,7 +415,6 @@ function getPaths(baseDir: string, slug: string): PipelinePaths {
     fullTextPath: process.env.LESSON_FULL_OUTPUT ?? path.join(lessonDir, "full.txt"),
     wavPath: process.env.LESSON_WAV_OUTPUT ?? path.join(lessonDir, "audio.wav"),
     mp3Path: process.env.LESSON_MP3_OUTPUT ?? path.join(lessonDir, "voice.mp3"),
-    whisperPath: process.env.LESSON_WHISPER_OUTPUT ?? path.join(lessonDir, "whisper.srt"),
     subtitlesPath: process.env.LESSON_SUBTITLES_OUTPUT ?? path.join(lessonDir, "subtitles.srt"),
     stylePath: process.env.LESSON_STYLE ?? path.join(lessonDir, "style.json"),
     activeVoicePath: path.join(baseDir, "input", "voice.mp3"),

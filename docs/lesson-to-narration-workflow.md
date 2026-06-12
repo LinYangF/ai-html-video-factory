@@ -165,51 +165,13 @@ lessons/chapter-name/voice.mp3
 
 如果某些词经常读错，可以在口播稿里改成更容易读的写法。
 
-## 6. 用 Whisper 生成 SRT
+## 6. 用剪映生成 SRT
 
-音频生成后，用 Whisper 生成初版字幕：
+音频生成后，把 `lessons/chapter-name/voice.mp3` 或 `lessons/chapter-name/audio.wav` 导入剪映。
 
-```bash
-whisper lessons/chapter-name/audio.wav \
-  --language Chinese \
-  --model small \
-  --device cuda \
-  --fp16 True \
-  --output_format srt \
-  --output_dir lessons/chapter-name
-```
+在剪映里使用自动字幕功能生成字幕，然后导出 SRT。
 
-初版字幕保存为：
-
-```text
-lessons/chapter-name/audio.srt
-```
-
-建议重命名为：
-
-```bash
-mv lessons/chapter-name/audio.srt lessons/chapter-name/whisper.srt
-```
-
-校正后字幕保存为：
-
-```text
-lessons/chapter-name/subtitles.srt
-```
-
-## 7. 用原始口播稿校正字幕
-
-Whisper 的时间轴通常可用，但文字可能有错。
-
-推荐做法：
-
-- 时间轴参考 Whisper。
-- 字幕文本使用原始口播稿。
-- 合并过短字幕，避免一字一条。
-- 保留自然停顿和标点。
-- 最终写入 `input/subtitles.srt`。
-
-校正后字幕建议另存一份：
+导出的最终字幕保存为：
 
 ```text
 lessons/chapter-name/subtitles.srt
@@ -220,10 +182,9 @@ lessons/chapter-name/subtitles.srt
 - 专有名词是否正确，例如 Buy Side、Sell Side、alpha。
 - 是否有错别字。
 - 是否有单字字幕。
-- 结尾是否有 Whisper 幻觉文本。
 - 字幕是否能被 `npm run build:html` 正常解析。
 
-## 8. 生成 HTML 预览和 MP4
+## 7. 生成 HTML 预览和 MP4
 
 生成 HTML 预览：
 
@@ -256,7 +217,6 @@ lessons/chapter-name/lesson.md
   -> lessons/chapter-name/full.txt
   -> lessons/chapter-name/audio.wav
   -> lessons/chapter-name/voice.mp3
-  -> lessons/chapter-name/whisper.srt
   -> lessons/chapter-name/subtitles.srt
   -> input/voice.mp3 + input/subtitles.srt
   -> output/preview.html
@@ -270,9 +230,9 @@ lessons/chapter-name/lesson.md
 1. 把教案改成逐页演示文案。
 2. 把所有旁白合并成整段口播稿。
 3. 用 CosyVoice 生成一整段音频。
-4. 用 Whisper 生成 SRT。
-5. 用原始口播稿校正 SRT 文本。
-6. 执行 `npm run build:html` 和 `npm run render`。
+4. 用剪映生成并导出 SRT。
+5. 把 SRT 保存为 `lessons/chapter-name/subtitles.srt`。
+6. 执行 `npm run lesson:activate -- chapter-name` 和 `npm run render`。
 
 这个版本先追求完整闭环，不追求每页音频精细拆分。
 

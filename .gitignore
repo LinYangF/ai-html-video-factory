@@ -4,12 +4,8 @@ output/
 dist/
 
 input/voice.mp3
-input/whisper/
-input/subtitles_corrected.srt
-
 lessons/*/audio.wav
 lessons/*/voice.mp3
-lessons/*/whisper.srt
 lessons/*/output/
 
 .DS_Store

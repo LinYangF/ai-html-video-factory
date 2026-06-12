@@ -13,7 +13,6 @@ lessons/
     full.txt
     audio.wav
     voice.mp3
-    whisper.srt
     subtitles.srt
     output/
 ```
