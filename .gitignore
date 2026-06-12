@@ -7,9 +7,6 @@ input/voice.mp3
 input/whisper/
 input/subtitles_corrected.srt
 
-audio/
-narration/full/
-
 lessons/*/audio.wav
 lessons/*/voice.mp3
 lessons/*/whisper.srt
