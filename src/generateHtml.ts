@@ -53,6 +53,7 @@ function render(ms) {
   const scene = sceneAt(ms);
   const key = scene ? scene.index + ":" + scene.kind : "empty";
   const progress = Math.min(100, Math.max(0, (ms / data.durationMs) * 100));
+  const subtitle = subtitleAt(ms);
 
   if (!scene) {
     stage.innerHTML = "";
@@ -61,34 +62,73 @@ function render(ms) {
 
   if (key !== lastSceneKey) {
     lastSceneKey = key;
-    stage.innerHTML = template(scene, progress);
+    stage.innerHTML = template(scene, progress, subtitle);
   } else {
     const fill = stage.querySelector(".progress-fill");
     if (fill) {
       fill.style.setProperty("--progress", progress.toFixed(2) + "%");
     }
+    const subtitleEl = stage.querySelector(".spoken-subtitle");
+    if (subtitleEl) {
+      subtitleEl.textContent = subtitle;
+    }
   }
 }
 
-function template(scene, progress) {
+function subtitleAt(ms) {
+  const cue = data.subtitles?.find((item) => ms >= item.startMs && ms < item.endMs);
+  return cue ? cue.text : "";
+}
+
+function cardItems(scene) {
+  if (Array.isArray(scene.items) && scene.items.length > 0) {
+    return scene.items;
+  }
+  const parts = String(scene.accent || scene.text)
+    .split(/[；;。，,、]/)
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, 4);
+  return parts.length
+    ? parts.map((part, index) => ({ title: part, body: "", tag: String(index + 1).padStart(2, "0") }))
+    : [{ title: scene.text, body: "", tag: "01" }];
+}
+
+function keywordBadges(text) {
+  return escapeHtml(text)
+    .replaceAll("Buy Side", '<span class="badge">Buy Side</span>')
+    .replaceAll("Sell Side", '<span class="badge">Sell Side</span>')
+    .replaceAll("SRT", '<span class="badge">SRT</span>')
+    .replaceAll("HTML", '<span class="badge">HTML</span>')
+    .replaceAll("MP4", '<span class="badge">MP4</span>')
+    .replaceAll("AI", '<span class="badge">AI</span>')
+    .replaceAll("alpha", '<span class="badge">alpha</span>')
+    .replaceAll("Alpha", '<span class="badge">Alpha</span>');
+}
+
+function template(scene, progress, subtitle) {
   const text = escapeHtml(scene.headline);
-  const accent = scene.accent ? '<span class="accent">' + escapeHtml(scene.accent) + '</span>' : "";
-  const full = escapeHtml(scene.text);
+  const accent = scene.accent ? keywordBadges(scene.accent) : "";
   const progressLine = '<div class="progress"><div class="progress-line"><div class="progress-fill" style="--progress: ' + progress.toFixed(2) + '%"></div></div><span>' + scene.index + '/' + data.scenes.length + '</span></div>';
+  const bottomSubtitle = '<div class="spoken-subtitle">' + escapeHtml(subtitle) + '</div>';
+  const pageChrome = progressLine + bottomSubtitle;
+  const cards = cardItems(scene)
+    .map((item, index) => '<article class="info-card color-' + (index % 4) + '"><div class="card-num">' + escapeHtml(item.tag || String(index + 1).padStart(2, "0")) + '</div><h3>' + keywordBadges(item.title) + '</h3><p>' + keywordBadges(item.body || "") + '</p></article>')
+    .join("");
 
   if (scene.kind === "title") {
-    return '<article class="frame enter"><div class="kicker">' + escapeHtml(data.title) + '</div><div class="content"><h1 class="headline">' + text + ' ' + accent + '</h1><div class="subtitle">' + escapeHtml(data.subtitle) + '</div></div>' + progressLine + '</article>';
-  }
-
-  if (scene.kind === "quote" || scene.kind === "summary") {
-    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content"><section class="card quote"><div class="quote-mark">“</div><p class="statement">' + full + '</p></section></div>' + progressLine + '</article>';
+    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="hero-content"><h1 class="headline">' + text + '</h1><p class="lead">' + accent + '</p><div class="mini-strip"><span>Buy Side</span><span>Sell Side</span><span>Quant</span></div></div>' + pageChrome + '</article>';
   }
 
   if (scene.kind === "tool") {
-    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content"><h1 class="headline">' + text + ' ' + accent + '</h1><div class="steps"><div class="step-card"><div class="step-number">01</div><div class="step-label">文案</div></div><div class="step-card"><div class="step-number">02</div><div class="step-label">音频</div></div><div class="step-card"><div class="step-number">03</div><div class="step-label">SRT</div></div><div class="step-card"><div class="step-number">04</div><div class="step-label">HTML / MP4</div></div></div></div>' + progressLine + '</article>';
+    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content grid-content"><section class="feature-card"><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2>' + text + '</h2><p>' + accent + '</p></section><div class="card-grid">' + cards + '</div></div>' + pageChrome + '</article>';
   }
 
-  return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content"><h1 class="headline">' + text + ' ' + accent + '</h1><section class="card"><p class="statement">' + full + '</p></section></div>' + progressLine + '</article>';
+  if (scene.kind === "quote" || scene.kind === "summary") {
+    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content split-content"><section class="feature-card wide"><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2>' + text + '</h2><p>' + accent + '</p></section><div class="side-note">' + cards + '</div></div>' + pageChrome + '</article>';
+  }
+
+  return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content grid-content"><section class="feature-card compact"><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2>' + text + '</h2><p>' + accent + '</p></section><div class="card-grid">' + cards + '</div></div>' + pageChrome + '</article>';
 }
 
 function tick(now) {

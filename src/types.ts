@@ -13,6 +13,13 @@ export type Scene = SubtitleCue & {
   label: string;
   headline: string;
   accent?: string;
+  items?: VisualItem[];
+};
+
+export type VisualItem = {
+  title: string;
+  body?: string;
+  tag?: string;
 };
 
 export type VisualScene = {
@@ -20,6 +27,7 @@ export type VisualScene = {
   body?: string;
   kind?: SceneKind;
   label?: string;
+  items?: VisualItem[];
   startMs?: number;
   endMs?: number;
   durationSec?: number;
@@ -51,6 +59,7 @@ export type Timeline = {
   fps: number;
   durationMs: number;
   scenes: Scene[];
+  subtitles: SubtitleCue[];
   style: VideoStyle;
 };
 

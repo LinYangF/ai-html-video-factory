@@ -15,6 +15,7 @@ export function buildTimeline(cues: SubtitleCue[], style: VideoStyle, visualScen
     fps: style.fps,
     durationMs,
     scenes,
+    subtitles: cues,
     style,
   };
 }
@@ -47,6 +48,7 @@ function buildVisualScenes(visualScenes: VisualScene[], durationMs: number): Sce
       label: visual.label ?? labelFor(kind, position),
       headline: visual.title,
       accent: visual.body,
+      items: visual.items,
     };
   });
 }
