@@ -1,0 +1,17 @@
+{
+  "title": "AI 视频自动生成工作流",
+  "subtitle": "文案 -> 音频 -> SRT 字幕 -> HTML 页面 -> MP4 视频",
+  "theme": "clean",
+  "width": 1920,
+  "height": 1080,
+  "fps": 30,
+  "fontFamily": "Inter, PingFang SC, Microsoft YaHei, Arial, sans-serif",
+  "background": "#fbf7ef",
+  "ink": "#221b38",
+  "muted": "#6e687c",
+  "accent": "#df765f",
+  "green": "#3ba66b",
+  "blue": "#8fb4e8",
+  "lavender": "#c9b8ef",
+  "card": "#fffdfa"
+}

@@ -1,0 +1,10 @@
+node_modules/
+
+output/
+dist/
+
+input/voice.mp3
+
+.DS_Store
+*.log
+npm-debug.log*
