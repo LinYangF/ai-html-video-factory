@@ -55,10 +55,16 @@ http://localhost:4173/preview.html
 
 ## 教案到音频自动化
 
-把教案保存到：
+每个教案放在独立目录里。比如：
 
 ```text
-input/lesson.md
+lessons/chapter1-buy-side-vs-sell-side/lesson.md
+```
+
+可以先创建目录和教案占位文件：
+
+```bash
+npm run lesson:init -- chapter1-buy-side-vs-sell-side
 ```
 
 使用 OpenAI 兼容接口：
@@ -66,7 +72,7 @@ input/lesson.md
 ```bash
 export OPENAI_API_KEY=你的_API_Key
 export OPENAI_MODEL=gpt-4o-mini
-npm run lesson:audio:all
+npm run lesson:audio:all -- chapter1-buy-side-vs-sell-side
 ```
 
 或者使用本地 Ollama：
@@ -74,32 +80,40 @@ npm run lesson:audio:all
 ```bash
 export LLM_PROVIDER=ollama
 export OLLAMA_MODEL=qwen2.5:14b
-npm run lesson:audio:all
+npm run lesson:audio:all -- chapter1-buy-side-vs-sell-side
 ```
 
 分步执行：
 
 ```bash
-npm run lesson:pages      # 教案 -> 画面页文案
-npm run lesson:narration  # 画面页文案 -> 逐页口播稿
-npm run lesson:full       # 逐页口播稿 -> 整段口播文本
-npm run lesson:audio      # 整段口播文本 -> WAV/MP3
+npm run lesson:init -- chapter1-buy-side-vs-sell-side       # 创建教案目录
+npm run lesson:pages -- chapter1-buy-side-vs-sell-side      # 教案 -> 画面页文案
+npm run lesson:narration -- chapter1-buy-side-vs-sell-side  # 画面页文案 -> 逐页口播稿
+npm run lesson:full -- chapter1-buy-side-vs-sell-side       # 逐页口播稿 -> 整段口播文本
+npm run lesson:audio -- chapter1-buy-side-vs-sell-side      # 整段口播文本 -> WAV/MP3
 ```
 
 默认输出：
 
 ```text
-narration/pages/lesson-pages.md
-narration/pages/lesson-narration.md
-narration/full/lesson.txt
-audio/full/lesson.wav
-input/voice.mp3
+lessons/chapter1-buy-side-vs-sell-side/pages.md
+lessons/chapter1-buy-side-vs-sell-side/narration.md
+lessons/chapter1-buy-side-vs-sell-side/full.txt
+lessons/chapter1-buy-side-vs-sell-side/audio.wav
+lessons/chapter1-buy-side-vs-sell-side/voice.mp3
 ```
 
-如果要处理不同章节，可以设置 `LESSON_SLUG`：
+渲染前，把某个教案激活到 `input/`：
 
 ```bash
-LESSON_SLUG=chapter1 npm run lesson:audio:all
+npm run lesson:activate -- chapter1-buy-side-vs-sell-side
+npm run render
+```
+
+也可以一条命令激活并渲染，视频会同时复制回对应教案目录：
+
+```bash
+npm run lesson:render -- chapter1-buy-side-vs-sell-side
 ```
 
 ## 输入文件

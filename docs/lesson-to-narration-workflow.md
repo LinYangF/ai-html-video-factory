@@ -10,10 +10,16 @@
 
 ## 1. 准备教案
 
-把原始教案整理成纯文本，建议保存为：
+把原始教案整理成纯文本，建议保存到独立 lesson 目录：
 
 ```text
-input/lesson.md
+lessons/chapter-name/lesson.md
+```
+
+可以用命令创建目录：
+
+```bash
+npm run lesson:init -- chapter-name
 ```
 
 教案不需要一开始就很精炼，但最好包含：
@@ -69,7 +75,7 @@ input/lesson.md
 输出建议保存为：
 
 ```text
-narration/pages/chapter-name-pages.md
+lessons/chapter-name/pages.md
 ```
 
 质量检查：
@@ -112,7 +118,7 @@ narration/pages/chapter-name-pages.md
 输出建议保存为：
 
 ```text
-narration/pages/chapter-name-narration.md
+lessons/chapter-name/narration.md
 ```
 
 ## 4. 合并成整段口播文本
@@ -130,7 +136,7 @@ narration/pages/chapter-name-narration.md
 输出建议保存为：
 
 ```text
-narration/full/chapter-name.txt
+lessons/chapter-name/full.txt
 ```
 
 ## 5. 生成音频
@@ -140,14 +146,14 @@ narration/full/chapter-name.txt
 输入：
 
 ```text
-narration/full/chapter-name.txt
+lessons/chapter-name/full.txt
 ```
 
 输出：
 
 ```text
-audio/full/chapter-name.wav
-input/voice.mp3
+lessons/chapter-name/audio.wav
+lessons/chapter-name/voice.mp3
 ```
 
 第一版先听这些点：
@@ -164,25 +170,31 @@ input/voice.mp3
 音频生成后，用 Whisper 生成初版字幕：
 
 ```bash
-whisper audio/full/chapter-name.wav \
+whisper lessons/chapter-name/audio.wav \
   --language Chinese \
   --model small \
   --device cuda \
   --fp16 True \
   --output_format srt \
-  --output_dir input/whisper
+  --output_dir lessons/chapter-name
 ```
 
 初版字幕保存为：
 
 ```text
-input/whisper/chapter-name.srt
+lessons/chapter-name/audio.srt
 ```
 
-然后把它复制到项目默认入口：
+建议重命名为：
 
 ```bash
-cp input/whisper/chapter-name.srt input/subtitles.srt
+mv lessons/chapter-name/audio.srt lessons/chapter-name/whisper.srt
+```
+
+校正后字幕保存为：
+
+```text
+lessons/chapter-name/subtitles.srt
 ```
 
 ## 7. 用原始口播稿校正字幕
@@ -200,7 +212,7 @@ Whisper 的时间轴通常可用，但文字可能有错。
 校正后字幕建议另存一份：
 
 ```text
-input/subtitles_corrected.srt
+lessons/chapter-name/subtitles.srt
 ```
 
 质量检查：
@@ -216,6 +228,7 @@ input/subtitles_corrected.srt
 生成 HTML 预览：
 
 ```bash
+npm run lesson:activate -- chapter-name
 npm run build:html
 ```
 
@@ -230,18 +243,22 @@ npm run render
 ```text
 output/preview.html
 output/video.mp4
+lessons/chapter-name/output/preview.html
+lessons/chapter-name/output/video.mp4
 ```
 
 ## 推荐文件流转
 
 ```text
-input/lesson.md
-  -> narration/pages/chapter-name-pages.md
-  -> narration/pages/chapter-name-narration.md
-  -> narration/full/chapter-name.txt
-  -> audio/full/chapter-name.wav
-  -> input/whisper/chapter-name.srt
-  -> input/subtitles.srt
+lessons/chapter-name/lesson.md
+  -> lessons/chapter-name/pages.md
+  -> lessons/chapter-name/narration.md
+  -> lessons/chapter-name/full.txt
+  -> lessons/chapter-name/audio.wav
+  -> lessons/chapter-name/voice.mp3
+  -> lessons/chapter-name/whisper.srt
+  -> lessons/chapter-name/subtitles.srt
+  -> input/voice.mp3 + input/subtitles.srt
   -> output/preview.html
   -> output/video.mp4
 ```
@@ -266,7 +283,7 @@ input/lesson.md
 准备教案：
 
 ```text
-input/lesson.md
+lessons/chapter-name/lesson.md
 ```
 
 使用 OpenAI 兼容接口：
@@ -274,7 +291,7 @@ input/lesson.md
 ```bash
 export OPENAI_API_KEY=你的_API_Key
 export OPENAI_MODEL=gpt-4o-mini
-npm run lesson:audio:all
+npm run lesson:audio:all -- chapter-name
 ```
 
 使用本地 Ollama：
@@ -282,30 +299,38 @@ npm run lesson:audio:all
 ```bash
 export LLM_PROVIDER=ollama
 export OLLAMA_MODEL=qwen2.5:14b
-npm run lesson:audio:all
+npm run lesson:audio:all -- chapter-name
 ```
 
 也可以分步执行：
 
 ```bash
-npm run lesson:pages
-npm run lesson:narration
-npm run lesson:full
-npm run lesson:audio
+npm run lesson:init -- chapter-name
+npm run lesson:pages -- chapter-name
+npm run lesson:narration -- chapter-name
+npm run lesson:full -- chapter-name
+npm run lesson:audio -- chapter-name
 ```
 
 默认输出：
 
 ```text
-narration/pages/lesson-pages.md
-narration/pages/lesson-narration.md
-narration/full/lesson.txt
-audio/full/lesson.wav
-input/voice.mp3
+lessons/chapter-name/pages.md
+lessons/chapter-name/narration.md
+lessons/chapter-name/full.txt
+lessons/chapter-name/audio.wav
+lessons/chapter-name/voice.mp3
 ```
 
-处理不同章节时，可以用 `LESSON_SLUG` 区分输出文件：
+渲染前激活某个 lesson：
 
 ```bash
-LESSON_SLUG=chapter1 npm run lesson:audio:all
+npm run lesson:activate -- chapter-name
+npm run render
+```
+
+或者直接激活并渲染：
+
+```bash
+npm run lesson:render -- chapter-name
 ```

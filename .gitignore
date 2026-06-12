@@ -10,6 +10,11 @@ input/subtitles_corrected.srt
 audio/
 narration/full/
 
+lessons/*/audio.wav
+lessons/*/voice.mp3
+lessons/*/whisper.srt
+lessons/*/output/
+
 .DS_Store
 *.log
 npm-debug.log*

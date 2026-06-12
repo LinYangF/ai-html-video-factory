@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { spawn } from "node:child_process";
 import path from "node:path";
@@ -12,22 +12,39 @@ type ChatMessage = {
 type PipelinePaths = {
   rootDir: string;
   inputDir: string;
+  outputDir: string;
+  lessonSlug: string;
+  lessonDir: string;
   lessonPath: string;
   pagesPath: string;
   narrationPath: string;
   fullTextPath: string;
   wavPath: string;
   mp3Path: string;
+  whisperPath: string;
+  subtitlesPath: string;
+  stylePath: string;
+  activeVoicePath: string;
+  activeSubtitlesPath: string;
+  activeStylePath: string;
+  previewPath: string;
+  videoPath: string;
+  lessonOutputDir: string;
 };
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 async function main(): Promise<void> {
   const command = process.argv[2] ?? "all";
-  const paths = getPaths(rootDir);
+  const paths = getPaths(rootDir, resolveLessonSlug());
 
   if (command === "pages") {
     await generatePages(paths);
+    return;
+  }
+
+  if (command === "init") {
+    await initLesson(paths);
     return;
   }
 
@@ -46,6 +63,16 @@ async function main(): Promise<void> {
     return;
   }
 
+  if (command === "activate") {
+    await activateLesson(paths);
+    return;
+  }
+
+  if (command === "render") {
+    await renderLesson(paths);
+    return;
+  }
+
   if (command === "all") {
     await generatePages(paths);
     await generateNarration(paths);
@@ -54,11 +81,25 @@ async function main(): Promise<void> {
     return;
   }
 
-  throw new Error(`Unknown command "${command}". Use pages, narration, full, audio, or all.`);
+  throw new Error(`Unknown command "${command}". Use init, pages, narration, full, audio, activate, render, or all.`);
+}
+
+async function initLesson(paths: PipelinePaths): Promise<void> {
+  await mkdir(paths.lessonDir, { recursive: true });
+  if (!existsSync(paths.lessonPath)) {
+    await writeFile(
+      paths.lessonPath,
+      `# ${paths.lessonSlug}\n\n把这节课的原始教案粘贴到这里。\n`,
+      "utf8",
+    );
+    console.log(`Lesson created at ${paths.lessonPath}`);
+    return;
+  }
+  console.log(`Lesson already exists at ${paths.lessonPath}`);
 }
 
 async function generatePages(paths: PipelinePaths): Promise<void> {
-  const lesson = await readRequired(paths.lessonPath, "Put your lesson content in input/lesson.md first.");
+  const lesson = await readRequired(paths.lessonPath, `Put your lesson content in ${relative(paths.lessonPath)} first.`);
   const output = await callLlm([
     {
       role: "system",
@@ -91,7 +132,7 @@ ${lesson}`,
 async function generateNarration(paths: PipelinePaths): Promise<void> {
   const pages = await readRequired(
     paths.pagesPath,
-    "Run npm run lesson:pages first, or put page script content in narration/pages/lesson-pages.md.",
+    `Run npm run lesson:pages -- ${paths.lessonSlug} first, or put page script content in ${relative(paths.pagesPath)}.`,
   );
   const output = await callLlm([
     {
@@ -125,7 +166,7 @@ ${pages}`,
 async function generateFullText(paths: PipelinePaths): Promise<void> {
   const narration = await readRequired(
     paths.narrationPath,
-    "Run npm run lesson:narration first, or put page narration content in narration/pages/lesson-narration.md.",
+    `Run npm run lesson:narration -- ${paths.lessonSlug} first, or put page narration content in ${relative(paths.narrationPath)}.`,
   );
   const fullText = extractNarrationText(narration);
   await writeOutput(paths.fullTextPath, fullText);
@@ -133,7 +174,7 @@ async function generateFullText(paths: PipelinePaths): Promise<void> {
 }
 
 async function generateAudio(paths: PipelinePaths): Promise<void> {
-  await readRequired(paths.fullTextPath, "Run npm run lesson:full first.");
+  await readRequired(paths.fullTextPath, `Run npm run lesson:full -- ${paths.lessonSlug} first.`);
 
   const cosyVoiceDir = process.env.COSYVOICE_DIR ?? "/home/sun/LinYF/CosyVoice";
   const cosyVoiceScript = process.env.COSYVOICE_TTS_SCRIPT ?? path.join(cosyVoiceDir, "scripts", "tts_full_text.py");
@@ -162,6 +203,36 @@ async function generateAudio(paths: PipelinePaths): Promise<void> {
 
   console.log(`WAV written to ${paths.wavPath}`);
   console.log(`MP3 written to ${paths.mp3Path}`);
+}
+
+async function activateLesson(paths: PipelinePaths): Promise<void> {
+  await mkdir(paths.inputDir, { recursive: true });
+  await copyRequired(paths.subtitlesPath, paths.activeSubtitlesPath, "Final subtitles are required before rendering.");
+
+  if (existsSync(paths.mp3Path)) {
+    await copyFile(paths.mp3Path, paths.activeVoicePath);
+    console.log(`Activated voice: ${relative(paths.mp3Path)} -> ${relative(paths.activeVoicePath)}`);
+  } else {
+    await rm(paths.activeVoicePath, { force: true });
+    console.log(`No lesson voice found. Render will use a generated silent audio track.`);
+  }
+
+  if (existsSync(paths.stylePath)) {
+    await copyFile(paths.stylePath, paths.activeStylePath);
+    console.log(`Activated style: ${relative(paths.stylePath)} -> ${relative(paths.activeStylePath)}`);
+  }
+
+  console.log(`Activated subtitles: ${relative(paths.subtitlesPath)} -> ${relative(paths.activeSubtitlesPath)}`);
+}
+
+async function renderLesson(paths: PipelinePaths): Promise<void> {
+  await activateLesson(paths);
+  await runCommand(process.execPath, ["src/index.ts", "render"]);
+  await mkdir(paths.lessonOutputDir, { recursive: true });
+  await copyFile(paths.previewPath, path.join(paths.lessonOutputDir, "preview.html"));
+  await copyFile(paths.videoPath, path.join(paths.lessonOutputDir, "video.mp4"));
+  console.log(`Lesson preview written to ${path.join(paths.lessonOutputDir, "preview.html")}`);
+  console.log(`Lesson video written to ${path.join(paths.lessonOutputDir, "video.mp4")}`);
 }
 
 async function callLlm(messages: ChatMessage[]): Promise<string> {
@@ -324,19 +395,58 @@ async function writeOutput(filePath: string, content: string): Promise<void> {
   await writeFile(filePath, content.trim() + "\n", "utf8");
 }
 
-function getPaths(baseDir: string): PipelinePaths {
-  const slug = process.env.LESSON_SLUG ?? "lesson";
+async function copyRequired(source: string, target: string, hint: string): Promise<void> {
+  if (!existsSync(source)) {
+    throw new Error(`Missing file: ${source}\n${hint}`);
+  }
+  await copyFile(source, target);
+}
+
+function getPaths(baseDir: string, slug: string): PipelinePaths {
+  const lessonDir = process.env.LESSON_DIR ?? path.join(baseDir, "lessons", slug);
   return {
     rootDir: baseDir,
     inputDir: path.join(baseDir, "input"),
-    lessonPath: process.env.LESSON_INPUT ?? path.join(baseDir, "input", `${slug}.md`),
-    pagesPath: process.env.LESSON_PAGES_OUTPUT ?? path.join(baseDir, "narration", "pages", `${slug}-pages.md`),
-    narrationPath:
-      process.env.LESSON_NARRATION_OUTPUT ?? path.join(baseDir, "narration", "pages", `${slug}-narration.md`),
-    fullTextPath: process.env.LESSON_FULL_OUTPUT ?? path.join(baseDir, "narration", "full", `${slug}.txt`),
-    wavPath: process.env.LESSON_WAV_OUTPUT ?? path.join(baseDir, "audio", "full", `${slug}.wav`),
-    mp3Path: process.env.LESSON_MP3_OUTPUT ?? path.join(baseDir, "input", "voice.mp3"),
+    outputDir: path.join(baseDir, "output"),
+    lessonSlug: slug,
+    lessonDir,
+    lessonPath: process.env.LESSON_INPUT ?? path.join(lessonDir, "lesson.md"),
+    pagesPath: process.env.LESSON_PAGES_OUTPUT ?? path.join(lessonDir, "pages.md"),
+    narrationPath: process.env.LESSON_NARRATION_OUTPUT ?? path.join(lessonDir, "narration.md"),
+    fullTextPath: process.env.LESSON_FULL_OUTPUT ?? path.join(lessonDir, "full.txt"),
+    wavPath: process.env.LESSON_WAV_OUTPUT ?? path.join(lessonDir, "audio.wav"),
+    mp3Path: process.env.LESSON_MP3_OUTPUT ?? path.join(lessonDir, "voice.mp3"),
+    whisperPath: process.env.LESSON_WHISPER_OUTPUT ?? path.join(lessonDir, "whisper.srt"),
+    subtitlesPath: process.env.LESSON_SUBTITLES_OUTPUT ?? path.join(lessonDir, "subtitles.srt"),
+    stylePath: process.env.LESSON_STYLE ?? path.join(lessonDir, "style.json"),
+    activeVoicePath: path.join(baseDir, "input", "voice.mp3"),
+    activeSubtitlesPath: path.join(baseDir, "input", "subtitles.srt"),
+    activeStylePath: path.join(baseDir, "input", "style.json"),
+    previewPath: path.join(baseDir, "output", "preview.html"),
+    videoPath: path.join(baseDir, "output", "video.mp4"),
+    lessonOutputDir: path.join(lessonDir, "output"),
   };
+}
+
+function resolveLessonSlug(): string {
+  const rawSlug = process.argv[3] ?? process.env.LESSON_SLUG ?? "lesson";
+  return slugify(rawSlug);
+}
+
+function slugify(value: string): string {
+  const slug = value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  if (!slug) {
+    throw new Error("Lesson slug cannot be empty.");
+  }
+  return slug;
+}
+
+function relative(filePath: string): string {
+  return path.relative(rootDir, filePath);
 }
 
 function runCommand(command: string, args: string[]): Promise<void> {
