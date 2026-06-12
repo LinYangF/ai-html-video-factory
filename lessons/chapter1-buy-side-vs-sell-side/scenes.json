@@ -13,7 +13,11 @@
     "kind": "quote",
     "label": "核心概念",
     "startMs": 18966,
-    "endMs": 24400
+    "endMs": 24400,
+    "items": [
+      { "tag": "01", "title": "买方", "body": "用资金做投资", "revealMs": 18966 },
+      { "tag": "02", "title": "卖方", "body": "为客户提供服务", "revealMs": 22033 }
+    ]
   },
   {
     "title": "买方 Buy Side",
@@ -21,7 +25,13 @@
     "kind": "step",
     "label": "概念 01",
     "startMs": 24400,
-    "endMs": 42933
+    "endMs": 42933,
+    "items": [
+      { "tag": "01", "title": "自己的钱", "body": "自有资本", "revealMs": 28900 },
+      { "tag": "02", "title": "客户的钱", "body": "受托资金", "revealMs": 31300 },
+      { "tag": "03", "title": "配置资产", "body": "股票、债券、交易", "revealMs": 34133 },
+      { "tag": "04", "title": "投资赚钱", "body": "目标很直接", "revealMs": 41000 }
+    ]
   },
   {
     "title": "卖方 Sell Side",
@@ -29,7 +39,13 @@
     "kind": "step",
     "label": "概念 02",
     "startMs": 42933,
-    "endMs": 65633
+    "endMs": 65633,
+    "items": [
+      { "tag": "01", "title": "提供交易", "body": "帮客户完成买卖", "revealMs": 52800 },
+      { "tag": "02", "title": "融资", "body": "帮公司找钱", "revealMs": 54700 },
+      { "tag": "03", "title": "研究", "body": "写研究报告", "revealMs": 55400 },
+      { "tag": "04", "title": "报价", "body": "提供买卖价格", "revealMs": 57266 }
+    ]
   },
   {
     "title": "用菜市场理解",
@@ -37,7 +53,13 @@
     "kind": "quote",
     "label": "生活类比",
     "startMs": 65633,
-    "endMs": 93233
+    "endMs": 93233,
+    "items": [
+      { "tag": "01", "title": "菜市场", "body": "把金融市场生活化", "revealMs": 66933 },
+      { "tag": "02", "title": "买方", "body": "拿钱来买菜的人", "revealMs": 70900 },
+      { "tag": "03", "title": "买得便宜", "body": "希望买到好菜", "revealMs": 73733 },
+      { "tag": "04", "title": "卖方", "body": "摊贩和批发商", "revealMs": 79433 }
+    ]
   },
   {
     "title": "放回真实市场",
@@ -45,7 +67,13 @@
     "kind": "step",
     "label": "市场角色",
     "startMs": 93233,
-    "endMs": 118100
+    "endMs": 118100,
+    "items": [
+      { "tag": "01", "title": "对冲基金", "body": "买方机构", "revealMs": 95400 },
+      { "tag": "02", "title": "资产管理", "body": "长期管理资产", "revealMs": 95400 },
+      { "tag": "03", "title": "自营交易", "body": "用自己的钱交易", "revealMs": 99500 },
+      { "tag": "04", "title": "做市商", "body": "持续报价提供流动性", "revealMs": 101000 }
+    ]
   },
   {
     "title": "小李的第一次投资",
@@ -53,7 +81,12 @@
     "kind": "quote",
     "label": "故事示例",
     "startMs": 118100,
-    "durationSec": 38
+    "durationSec": 38,
+    "items": [
+      { "tag": "01", "title": "小李", "body": "刚工作，存了10万元", "revealMs": 120300 },
+      { "tag": "02", "title": "券商 App", "body": "下单买股票", "revealMs": 124400 },
+      { "tag": "03", "title": "5 元佣金", "body": "卖方的收入", "revealMs": 128833 }
+    ]
   },
   {
     "title": "大型买方机构",

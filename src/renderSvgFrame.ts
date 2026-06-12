@@ -69,16 +69,23 @@ function renderSceneSvg(scene: Scene, style: Timeline["style"], localMs: number)
 
   if (scene.kind === "tool") {
     return `${animated(featureCard(150, 220, 760, 250, scene, style), localMs, 120, 600, 0, 22)}
-      ${items.slice(0, 4).map((item, index) => animated(infoCard(950 + (index % 2) * 390, 220 + Math.floor(index / 2) * 280, 360, 250, item, index), localMs, 520 + index * 180, 520, 0, 24)).join("\n")}`;
+      ${items.slice(0, 4).map((item, index) => animated(infoCard(950 + (index % 2) * 390, 220 + Math.floor(index / 2) * 280, 360, 250, item, index), localMs, itemDelay(scene, item, index), 520, 0, 24)).join("\n")}`;
   }
 
   if (scene.kind === "quote" || scene.kind === "summary") {
     return `${animated(featureCard(150, 220, 1460, 310, scene, style), localMs, 120, 620, 0, 24)}
-      ${items.slice(0, 3).map((item, index) => animated(infoCard(150 + index * 500, 570, 460, 210, item, index), localMs, 580 + index * 180, 520, 0, 24)).join("\n")}`;
+      ${items.slice(0, 3).map((item, index) => animated(infoCard(150 + index * 500, 570, 460, 210, item, index), localMs, itemDelay(scene, item, index), 520, 0, 24)).join("\n")}`;
   }
 
   return `${animated(featureCard(150, 250, 720, 470, scene, style), localMs, 120, 620, 0, 24)}
-    ${items.slice(0, 4).map((item, index) => animated(infoCard(930 + (index % 2) * 360, 250 + Math.floor(index / 2) * 245, 330, 220, item, index), localMs, 520 + index * 180, 520, 0, 24)).join("\n")}`;
+    ${items.slice(0, 4).map((item, index) => animated(infoCard(930 + (index % 2) * 360, 250 + Math.floor(index / 2) * 245, 330, 220, item, index), localMs, itemDelay(scene, item, index), 520, 0, 24)).join("\n")}`;
+}
+
+function itemDelay(scene: Scene, item: VisualItem, index: number): number {
+  if (typeof item.revealMs === "number") {
+    return Math.max(260, item.revealMs - scene.startMs);
+  }
+  return 520 + index * 180;
 }
 
 function featureCard(x: number, y: number, w: number, h: number, scene: Scene, style: Timeline["style"]): string {

@@ -20,6 +20,7 @@ export type VisualItem = {
   title: string;
   body?: string;
   tag?: string;
+  revealMs?: number;
 };
 
 export type VisualScene = {

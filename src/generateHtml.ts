@@ -34,7 +34,6 @@ const data = window.__VIDEO_DATA__;
 const stage = document.querySelector("#stage");
 let manualTime = null;
 let startedAt = performance.now();
-let lastSceneKey = "";
 
 function escapeHtml(value) {
   return String(value)
@@ -51,7 +50,6 @@ function sceneAt(ms) {
 
 function render(ms) {
   const scene = sceneAt(ms);
-  const key = scene ? scene.index + ":" + scene.kind : "empty";
   const progress = Math.min(100, Math.max(0, (ms / data.durationMs) * 100));
   const subtitle = subtitleAt(ms);
 
@@ -60,19 +58,7 @@ function render(ms) {
     return;
   }
 
-  if (key !== lastSceneKey) {
-    lastSceneKey = key;
-    stage.innerHTML = template(scene, progress, subtitle);
-  } else {
-    const fill = stage.querySelector(".progress-fill");
-    if (fill) {
-      fill.style.setProperty("--progress", progress.toFixed(2) + "%");
-    }
-    const subtitleEl = stage.querySelector(".spoken-subtitle");
-    if (subtitleEl) {
-      subtitleEl.textContent = subtitle;
-    }
-  }
+  stage.innerHTML = template(scene, progress, subtitle, ms);
 }
 
 function subtitleAt(ms) {
@@ -106,14 +92,22 @@ function keywordBadges(text) {
     .replaceAll("Alpha", '<span class="badge">Alpha</span>');
 }
 
-function template(scene, progress, subtitle) {
+function itemStyle(scene, item, index, ms) {
+  const revealMs = typeof item.revealMs === "number" ? item.revealMs : scene.startMs + 520 + index * 180;
+  const t = Math.min(1, Math.max(0, (ms - revealMs) / 520));
+  const eased = 1 - Math.pow(1 - t, 3);
+  const y = 24 * (1 - eased);
+  return 'style="opacity:' + eased.toFixed(3) + '; transform: translateY(' + y.toFixed(1) + 'px)"';
+}
+
+function template(scene, progress, subtitle, ms) {
   const text = escapeHtml(scene.headline);
   const accent = scene.accent ? keywordBadges(scene.accent) : "";
   const progressLine = '<div class="progress"><div class="progress-line"><div class="progress-fill" style="--progress: ' + progress.toFixed(2) + '%"></div></div><span>' + scene.index + '/' + data.scenes.length + '</span></div>';
   const bottomSubtitle = '<div class="spoken-subtitle">' + escapeHtml(subtitle) + '</div>';
   const pageChrome = progressLine + bottomSubtitle;
   const cards = cardItems(scene)
-    .map((item, index) => '<article class="info-card color-' + (index % 4) + '"><div class="card-num">' + escapeHtml(item.tag || String(index + 1).padStart(2, "0")) + '</div><h3>' + keywordBadges(item.title) + '</h3><p>' + keywordBadges(item.body || "") + '</p></article>')
+    .map((item, index) => '<article class="info-card color-' + (index % 4) + '" ' + itemStyle(scene, item, index, ms) + '><div class="card-num">' + escapeHtml(item.tag || String(index + 1).padStart(2, "0")) + '</div><h3>' + keywordBadges(item.title) + '</h3><p>' + keywordBadges(item.body || "") + '</p></article>')
     .join("");
 
   if (scene.kind === "title") {
