@@ -403,6 +403,7 @@ async function copyRequired(source: string, target: string, hint: string): Promi
 
 function getPaths(baseDir: string, slug: string): PipelinePaths {
   const lessonDir = process.env.LESSON_DIR ?? path.join(baseDir, "lessons", slug);
+  const currentOutputDir = path.join(baseDir, "output", "current");
   return {
     rootDir: baseDir,
     inputDir: path.join(baseDir, "input"),
@@ -420,8 +421,8 @@ function getPaths(baseDir: string, slug: string): PipelinePaths {
     activeVoicePath: path.join(baseDir, "input", "voice.mp3"),
     activeSubtitlesPath: path.join(baseDir, "input", "subtitles.srt"),
     activeStylePath: path.join(baseDir, "input", "style.json"),
-    previewPath: path.join(baseDir, "output", "preview.html"),
-    videoPath: path.join(baseDir, "output", "video.mp4"),
+    previewPath: path.join(currentOutputDir, "preview.html"),
+    videoPath: path.join(currentOutputDir, "video.mp4"),
     lessonOutputDir: path.join(lessonDir, "output"),
   };
 }

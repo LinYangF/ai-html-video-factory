@@ -39,12 +39,12 @@ server.listen(port, () => {
 
 function resolveFile(pathname: string): string | null {
   if (pathname === "/" || pathname === "/preview.html") {
-    return path.join(rootDir, "output", "preview.html");
+    return path.join(rootDir, "output", "current", "preview.html");
   }
 
   const safePath = path.normalize(pathname).replace(/^(\.\.[/\\])+/, "");
-  const outputPath = path.join(rootDir, "output", safePath);
-  if (outputPath.startsWith(path.join(rootDir, "output"))) {
+  const outputPath = path.join(rootDir, "output", "current", safePath);
+  if (outputPath.startsWith(path.join(rootDir, "output", "current"))) {
     return outputPath;
   }
 

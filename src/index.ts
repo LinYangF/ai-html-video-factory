@@ -41,17 +41,18 @@ export async function buildHtml(paths = projectPaths(rootDir)): Promise<Timeline
 }
 
 function projectPaths(baseDir: string): ProjectPaths {
+  const outputDir = path.join(baseDir, "output", "current");
   return {
     rootDir: baseDir,
     inputDir: path.join(baseDir, "input"),
-    outputDir: path.join(baseDir, "output"),
-    framesDir: path.join(baseDir, "output", "frames"),
+    outputDir,
+    framesDir: path.join(outputDir, "frames"),
     templateDir: path.join(baseDir, "templates"),
     subtitlesPath: path.join(baseDir, "input", "subtitles.srt"),
     stylePath: path.join(baseDir, "input", "style.json"),
     voicePath: path.join(baseDir, "input", "voice.mp3"),
-    previewPath: path.join(baseDir, "output", "preview.html"),
-    videoPath: path.join(baseDir, "output", "video.mp4"),
+    previewPath: path.join(outputDir, "preview.html"),
+    videoPath: path.join(outputDir, "video.mp4"),
   };
 }
 

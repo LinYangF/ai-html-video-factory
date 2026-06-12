@@ -37,8 +37,8 @@ npm run render
 输出文件：
 
 ```text
-output/preview.html
-output/video.mp4
+output/current/preview.html
+output/current/video.mp4
 ```
 
 启动预览服务：
@@ -146,13 +146,13 @@ input/
 npm run build:html
 ```
 
-读取 `input/subtitles.srt` 和 `input/style.json`，生成 `output/preview.html`。
+读取 `input/subtitles.srt` 和 `input/style.json`，生成 `output/current/preview.html`。
 
 ```bash
 npm run render
 ```
 
-先生成 HTML 预览，再把时间轴渲染为帧序列，最后用 FFmpeg 合成为 `output/video.mp4`。
+先生成 HTML 预览，再把时间轴渲染为帧序列，最后用 FFmpeg 合成为 `output/current/video.mp4`。
 
 ```bash
 npm run dev
@@ -166,6 +166,10 @@ npm run dev
 ai-html-video-factory/
   input/
   output/
+    current/      # 当前激活 lesson 的临时预览、帧序列和视频
+  lessons/
+    lesson-slug/
+      output/     # 这个 lesson 自己的最终预览和视频
   src/
     parseSrt.ts
     buildTimeline.ts

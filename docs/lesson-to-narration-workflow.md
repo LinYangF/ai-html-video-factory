@@ -202,8 +202,8 @@ npm run render
 输出：
 
 ```text
-output/preview.html
-output/video.mp4
+output/current/preview.html
+output/current/video.mp4
 lessons/chapter-name/output/preview.html
 lessons/chapter-name/output/video.mp4
 ```
@@ -219,8 +219,10 @@ lessons/chapter-name/lesson.md
   -> lessons/chapter-name/voice.mp3
   -> lessons/chapter-name/subtitles.srt
   -> input/voice.mp3 + input/subtitles.srt
-  -> output/preview.html
-  -> output/video.mp4
+  -> output/current/preview.html
+  -> output/current/video.mp4
+  -> lessons/chapter-name/output/preview.html
+  -> lessons/chapter-name/output/video.mp4
 ```
 
 ## 最小可行版本
