@@ -4,6 +4,11 @@ output/
 dist/
 
 input/voice.mp3
+input/whisper/
+input/subtitles_corrected.srt
+
+audio/
+narration/full/
 
 .DS_Store
 *.log
