@@ -7,6 +7,11 @@
     "dev": "node scripts/dev.ts",
     "build:html": "node src/index.ts build",
     "render": "node src/index.ts render",
-    "check": "node src/index.ts build"
+    "check": "node src/index.ts build",
+    "lesson:pages": "node src/lessonPipeline.ts pages",
+    "lesson:narration": "node src/lessonPipeline.ts narration",
+    "lesson:full": "node src/lessonPipeline.ts full",
+    "lesson:audio": "node src/lessonPipeline.ts audio",
+    "lesson:audio:all": "node src/lessonPipeline.ts all"
   }
 }

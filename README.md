@@ -53,6 +53,55 @@ npm run dev
 http://localhost:4173/preview.html
 ```
 
+## 教案到音频自动化
+
+把教案保存到：
+
+```text
+input/lesson.md
+```
+
+使用 OpenAI 兼容接口：
+
+```bash
+export OPENAI_API_KEY=你的_API_Key
+export OPENAI_MODEL=gpt-4o-mini
+npm run lesson:audio:all
+```
+
+或者使用本地 Ollama：
+
+```bash
+export LLM_PROVIDER=ollama
+export OLLAMA_MODEL=qwen2.5:14b
+npm run lesson:audio:all
+```
+
+分步执行：
+
+```bash
+npm run lesson:pages      # 教案 -> 画面页文案
+npm run lesson:narration  # 画面页文案 -> 逐页口播稿
+npm run lesson:full       # 逐页口播稿 -> 整段口播文本
+npm run lesson:audio      # 整段口播文本 -> WAV/MP3
+```
+
+默认输出：
+
+```text
+narration/pages/lesson-pages.md
+narration/pages/lesson-narration.md
+narration/full/lesson.txt
+audio/full/lesson.wav
+input/voice.mp3
+```
+
+如果要处理不同章节，可以设置 `LESSON_SLUG`：
+
+```bash
+LESSON_SLUG=chapter1 npm run lesson:audio:all
+```
+
 ## 输入文件
 
 把你的文件放到 `input/`：

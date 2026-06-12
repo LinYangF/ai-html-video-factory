@@ -258,3 +258,54 @@ input/lesson.md
 6. 执行 `npm run build:html` 和 `npm run render`。
 
 这个版本先追求完整闭环，不追求每页音频精细拆分。
+
+## 自动化命令
+
+项目已经内置教案到音频的自动化入口。
+
+准备教案：
+
+```text
+input/lesson.md
+```
+
+使用 OpenAI 兼容接口：
+
+```bash
+export OPENAI_API_KEY=你的_API_Key
+export OPENAI_MODEL=gpt-4o-mini
+npm run lesson:audio:all
+```
+
+使用本地 Ollama：
+
+```bash
+export LLM_PROVIDER=ollama
+export OLLAMA_MODEL=qwen2.5:14b
+npm run lesson:audio:all
+```
+
+也可以分步执行：
+
+```bash
+npm run lesson:pages
+npm run lesson:narration
+npm run lesson:full
+npm run lesson:audio
+```
+
+默认输出：
+
+```text
+narration/pages/lesson-pages.md
+narration/pages/lesson-narration.md
+narration/full/lesson.txt
+audio/full/lesson.wav
+input/voice.mp3
+```
+
+处理不同章节时，可以用 `LESSON_SLUG` 区分输出文件：
+
+```bash
+LESSON_SLUG=chapter1 npm run lesson:audio:all
+```
