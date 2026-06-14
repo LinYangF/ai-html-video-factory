@@ -15,6 +15,7 @@
     "lesson:audio": "node src/lessonPipeline.ts audio",
     "lesson:audio:all": "node src/lessonPipeline.ts all",
     "lesson:activate": "node src/lessonPipeline.ts activate",
+    "lesson:check-scenes": "node scripts/checkScenes.ts",
     "lesson:render": "node src/lessonPipeline.ts render"
   }
 }

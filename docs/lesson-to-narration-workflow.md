@@ -208,7 +208,67 @@ lessons/chapter-name/scenes.json
 - 是否有单字字幕。
 - 字幕是否能被 `npm run build:html` 正常解析。
 
-## 7. 生成 HTML 预览和 MP4
+## 7. 设计 HTML 动画页节奏
+
+SRT 只负责字幕和总时长，不直接决定画面。真正的 PPT 页面结构和动画节奏由 `scenes.json` 控制。
+
+详细质量规范见：
+
+```text
+docs/ppt-animation-quality-guide.md
+```
+
+推荐采用“逐步呈现信息”的方法，而不是一页开始就把所有内容铺满：
+
+1. 页面开始时，先出现主视觉或主标题。
+2. 稍后出现一句核心解释。
+3. 旁白讲到一个关键词，再弹出对应卡片、节点或对比项。
+4. 每个 `items[]` 只承载一个小重点。
+5. 当前讲到的卡片可以短暂高亮，让观众知道眼睛该看哪里。
+
+`revealMs` 使用整条音频中的绝对毫秒时间。比如旁白在第 52.8 秒讲到“提供交易”，就在对应卡片上写 `52800`：
+
+```json
+{
+  "title": "卖方 Sell Side",
+  "body": "提供交易、融资、研究、报价等服务",
+  "kind": "step",
+  "label": "概念 02",
+  "startMs": 42933,
+  "endMs": 65633,
+  "items": [
+    { "tag": "01", "title": "提供交易", "body": "帮客户完成买卖", "revealMs": 52800 },
+    { "tag": "02", "title": "融资", "body": "帮公司找钱", "revealMs": 54700 },
+    { "tag": "03", "title": "研究", "body": "写研究报告", "revealMs": 55400 },
+    { "tag": "04", "title": "报价", "body": "提供买卖价格", "revealMs": 57266 }
+  ]
+}
+```
+
+动效节奏参考：
+
+- 标题页：慢入场，先问题，再补充背景。
+- 对比页：左右两侧分开进入，不要同时出现。
+- 流程页：节点按讲述顺序逐个点亮。
+- 故事页：按“人物 -> 行为 -> 结果”的镜头顺序推进。
+- 总结页：先给结论，再逐条出现 takeaway。
+
+质量检查：
+
+- 暂停在每页开始 0.5 秒时，页面不应该已经铺满所有卡片。
+- 旁白说到“提供交易”“融资”“研究”等词时，对应卡片才出现。
+- 字幕在底部，只辅助听觉，不应该变成画面主体。
+- 每页只有一个主重点，其他信息都作为逐项补充。
+- 第 8 页之后也必须继续和音频对齐，不能只检查前 2 分钟。
+- 没有明确子项的页面应该是单主卡，不要硬拆 `01/02/03`。
+
+## 8. 生成 HTML 预览和 MP4
+
+生成前先检查 `scenes.json`：
+
+```bash
+npm run lesson:check-scenes -- chapter-name
+```
 
 生成 HTML 预览：
 
@@ -242,7 +302,7 @@ lessons/chapter-name/lesson.md
   -> lessons/chapter-name/audio.wav
   -> lessons/chapter-name/voice.mp3
   -> lessons/chapter-name/subtitles.srt
-  -> lessons/chapter-name/scenes.json
+  -> lessons/chapter-name/scenes.json  # 画面页、视觉结构、revealMs 动画节奏
   -> input/voice.mp3 + input/subtitles.srt
   -> input/scenes.json
   -> output/current/preview.html

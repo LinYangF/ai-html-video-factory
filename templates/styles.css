@@ -133,6 +133,11 @@ body {
   grid-template-rows: auto auto;
 }
 
+.single-content {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+}
+
 .feature-card,
 .info-card {
   border-radius: 8px;
@@ -167,7 +172,8 @@ body {
 }
 
 .feature-card h2 {
-  font-size: 42px;
+  font-size: 40px;
+  line-height: 1.22;
 }
 
 .feature-card p,
@@ -206,14 +212,24 @@ body {
   display: grid;
   align-content: center;
   gap: 12px;
+  transform-origin: center;
 }
 
 .info-card h3 {
-  font-size: 28px;
+  font-size: 26px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .info-card p {
-  font-size: 18px;
+  font-size: 17px;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.info-card.is-hot {
+  border-color: rgba(33, 29, 50, 0.32);
+  box-shadow: 0 20px 0 rgba(33, 29, 50, 0.08);
 }
 
 .color-0 {

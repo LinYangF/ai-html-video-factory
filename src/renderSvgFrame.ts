@@ -68,17 +68,26 @@ function renderSceneSvg(scene: Scene, style: Timeline["style"], localMs: number)
   }
 
   if (scene.kind === "tool") {
-    return `${animated(featureCard(150, 220, 760, 250, scene, style), localMs, 120, 600, 0, 22)}
-      ${items.slice(0, 4).map((item, index) => animated(infoCard(950 + (index % 2) * 390, 220 + Math.floor(index / 2) * 280, 360, 250, item, index), localMs, itemDelay(scene, item, index), 520, 0, 24)).join("\n")}`;
+    if (items.length === 0) {
+      return featureCard(150, 260, 1460, 320, scene, style, localMs);
+    }
+    return `${featureCard(150, 220, 760, 250, scene, style, localMs)}
+      ${items.slice(0, 4).map((item, index) => animated(infoCard(950 + (index % 2) * 390, 220 + Math.floor(index / 2) * 280, 360, 250, item, index), localMs, itemDelay(scene, item, index), 560, index % 2 === 0 ? 34 : -34, 18)).join("\n")}`;
   }
 
   if (scene.kind === "quote" || scene.kind === "summary") {
-    return `${animated(featureCard(150, 220, 1460, 310, scene, style), localMs, 120, 620, 0, 24)}
-      ${items.slice(0, 3).map((item, index) => animated(infoCard(150 + index * 500, 570, 460, 210, item, index), localMs, itemDelay(scene, item, index), 520, 0, 24)).join("\n")}`;
+    if (items.length === 0) {
+      return featureCard(150, 260, 1460, 320, scene, style, localMs);
+    }
+    return `${featureCard(150, 220, 1460, 310, scene, style, localMs)}
+      ${items.slice(0, 3).map((item, index) => animated(infoCard(150 + index * 500, 570, 460, 210, item, index), localMs, itemDelay(scene, item, index), 620, 0, 26)).join("\n")}`;
   }
 
-  return `${animated(featureCard(150, 250, 720, 470, scene, style), localMs, 120, 620, 0, 24)}
-    ${items.slice(0, 4).map((item, index) => animated(infoCard(930 + (index % 2) * 360, 250 + Math.floor(index / 2) * 245, 330, 220, item, index), localMs, itemDelay(scene, item, index), 520, 0, 24)).join("\n")}`;
+  if (items.length === 0) {
+    return featureCard(150, 260, 1460, 320, scene, style, localMs);
+  }
+  return `${featureCard(150, 250, 720, 470, scene, style, localMs)}
+    ${items.slice(0, 4).map((item, index) => animated(infoCard(930 + (index % 2) * 360, 250 + Math.floor(index / 2) * 245, 330, 220, item, index), localMs, itemDelay(scene, item, index), 560, index % 2 === 0 ? 32 : -32, 18)).join("\n")}`;
 }
 
 function itemDelay(scene: Scene, item: VisualItem, index: number): number {
@@ -88,29 +97,40 @@ function itemDelay(scene: Scene, item: VisualItem, index: number): number {
   return 520 + index * 180;
 }
 
-function featureCard(x: number, y: number, w: number, h: number, scene: Scene, style: Timeline["style"]): string {
-  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="#ddcdf6" opacity="0.94"/>
-  <text x="${x + 42}" y="${y + 84}" fill="#201a31" font-size="64" font-style="italic" font-weight="900" font-family="Georgia">${String(scene.index).padStart(2, "0")}</text>
-  ${textLines(wrapText(scene.headline, 14), x + 42, y + 152, 46, style.ink, 900, "Georgia, serif")}
-  ${textLines(wrapText(scene.accent ?? "", 26), x + 42, y + 225, 27, "#343044", 800)}`;
+function featureCard(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  scene: Scene,
+  style: Timeline["style"],
+  localMs: number,
+): string {
+  const shell = `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="#ddcdf6" opacity="0.94"/>
+  <text x="${x + 42}" y="${y + 84}" fill="#201a31" font-size="64" font-style="italic" font-weight="900" font-family="Georgia">${String(scene.index).padStart(2, "0")}</text>`;
+  const title = textLines(wrapText(scene.headline, 14), x + 42, y + 152, 46, style.ink, 900, "Georgia, serif");
+  const accent = textLines(wrapText(scene.accent ?? "", 26), x + 42, y + 225, 27, "#343044", 800);
+  return `${animated(shell, localMs, 120, 560, 0, 20)}
+  ${animated(title, localMs, 360, 620, 0, 20)}
+  ${animated(accent, localMs, 980, 620, 0, 20)}`;
 }
 
 function infoCard(x: number, y: number, w: number, h: number, item: VisualItem, index: number): string {
   const fills = ["#ffd9c5", "#ccefdc", "#cfe0fb", "#ddcdf6"];
+  const tag = item.tag
+    ? `<text x="${x + 34}" y="${y + 72}" fill="#201a31" font-size="52" font-style="italic" font-weight="900" font-family="Georgia">${escapeXml(item.tag)}</text>`
+    : "";
+  const titleY = item.tag ? y + 124 : y + 82;
+  const bodyY = item.tag ? y + 174 : y + 134;
   return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="8" fill="${fills[index % fills.length]}" opacity="0.96"/>
-  <text x="${x + 34}" y="${y + 72}" fill="#201a31" font-size="52" font-style="italic" font-weight="900" font-family="Georgia">${escapeXml(item.tag ?? String(index + 1).padStart(2, "0"))}</text>
-  ${textLines(wrapText(item.title, 10), x + 34, y + 124, 32, "#201a31", 900, "Georgia, serif")}
-  ${textLines(wrapText(item.body ?? "", 18), x + 34, y + 174, 22, "#343044", 750)}`;
+  ${tag}
+  ${textLines(wrapText(item.title, 8), x + 34, titleY, 29, "#201a31", 900, "Georgia, serif")}
+  ${textLines(wrapText(item.body ?? "", 14), x + 34, bodyY, 20, "#343044", 750)}`;
 }
 
 function cardItems(scene: Scene): VisualItem[] {
   if (scene.items?.length) return scene.items;
-  const source = scene.accent || scene.text;
-  const parts = source.split(/[；;。，,、]/).map((item) => item.trim()).filter(Boolean);
-  return (parts.length ? parts : [source]).slice(0, 4).map((title, index) => ({
-    title,
-    tag: String(index + 1).padStart(2, "0"),
-  }));
+  return [];
 }
 
 function pill(x: number, y: number, label: string): string {
@@ -151,10 +171,32 @@ function textLines(lines: string[], x: number, y: number, size: number, color: s
 function wrapText(text: string, maxChars: number): string[] {
   const chars = [...text];
   const lines: string[] = [];
-  for (let index = 0; index < chars.length; index += maxChars) {
-    lines.push(chars.slice(index, index + maxChars).join(""));
+  let index = 0;
+  while (index < chars.length) {
+    let end = Math.min(chars.length, index + maxChars);
+    if (end < chars.length && isAsciiWord(chars[end - 1]) && isAsciiWord(chars[end])) {
+      let wordStart = end - 1;
+      while (wordStart > index && isAsciiWord(chars[wordStart - 1])) {
+        wordStart -= 1;
+      }
+      let wordEnd = end;
+      while (wordEnd < chars.length && isAsciiWord(chars[wordEnd])) {
+        wordEnd += 1;
+      }
+      if (wordStart > index + 4) {
+        end = wordStart;
+      } else if (wordEnd - index <= maxChars + 6) {
+        end = wordEnd;
+      }
+    }
+    lines.push(chars.slice(index, end).join(""));
+    index = end;
   }
   return lines.slice(0, 4);
+}
+
+function isAsciiWord(char: string | undefined): boolean {
+  return !!char && /^[A-Za-z0-9]$/.test(char);
 }
 
 function escapeXml(value: string): string {

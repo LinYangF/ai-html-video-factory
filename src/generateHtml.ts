@@ -70,14 +70,7 @@ function cardItems(scene) {
   if (Array.isArray(scene.items) && scene.items.length > 0) {
     return scene.items;
   }
-  const parts = String(scene.accent || scene.text)
-    .split(/[；;。，,、]/)
-    .map((item) => item.trim())
-    .filter(Boolean)
-    .slice(0, 4);
-  return parts.length
-    ? parts.map((part, index) => ({ title: part, body: "", tag: String(index + 1).padStart(2, "0") }))
-    : [{ title: scene.text, body: "", tag: "01" }];
+  return [];
 }
 
 function keywordBadges(text) {
@@ -96,8 +89,28 @@ function itemStyle(scene, item, index, ms) {
   const revealMs = typeof item.revealMs === "number" ? item.revealMs : scene.startMs + 520 + index * 180;
   const t = Math.min(1, Math.max(0, (ms - revealMs) / 520));
   const eased = 1 - Math.pow(1 - t, 3);
-  const y = 24 * (1 - eased);
+  const x = (index % 2 === 0 ? 34 : -34) * (1 - eased);
+  const y = 18 * (1 - eased);
+  const scale = 0.965 + 0.035 * eased;
+  const hot = ms >= revealMs && ms < revealMs + 900;
+  return {
+    attr: 'style="opacity:' + eased.toFixed(3) + '; transform: translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(' + scale.toFixed(3) + ')"',
+    className: hot ? " is-hot" : "",
+  };
+}
+
+function stageStyle(scene, ms, delay, duration, fromY) {
+  const t = Math.min(1, Math.max(0, (ms - scene.startMs - delay) / duration));
+  const eased = 1 - Math.pow(1 - t, 3);
+  const y = fromY * (1 - eased);
   return 'style="opacity:' + eased.toFixed(3) + '; transform: translateY(' + y.toFixed(1) + 'px)"';
+}
+
+function featureCard(scene, text, accent, ms, extraClass) {
+  const shell = stageStyle(scene, ms, 90, 560, 22);
+  const titleStyle = stageStyle(scene, ms, 300, 620, 20);
+  const leadStyle = stageStyle(scene, ms, 980, 620, 18);
+  return '<section class="feature-card ' + extraClass + '" ' + shell + '><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2 ' + titleStyle + '>' + text + '</h2><p ' + leadStyle + '>' + accent + '</p></section>';
 }
 
 function template(scene, progress, subtitle, ms) {
@@ -107,22 +120,29 @@ function template(scene, progress, subtitle, ms) {
   const bottomSubtitle = '<div class="spoken-subtitle">' + escapeHtml(subtitle) + '</div>';
   const pageChrome = progressLine + bottomSubtitle;
   const cards = cardItems(scene)
-    .map((item, index) => '<article class="info-card color-' + (index % 4) + '" ' + itemStyle(scene, item, index, ms) + '><div class="card-num">' + escapeHtml(item.tag || String(index + 1).padStart(2, "0")) + '</div><h3>' + keywordBadges(item.title) + '</h3><p>' + keywordBadges(item.body || "") + '</p></article>')
+    .map((item, index) => {
+      const motion = itemStyle(scene, item, index, ms);
+      const num = item.tag ? '<div class="card-num">' + escapeHtml(item.tag) + '</div>' : "";
+      return '<article class="info-card color-' + (index % 4) + motion.className + '" ' + motion.attr + '>' + num + '<h3>' + keywordBadges(item.title) + '</h3><p>' + keywordBadges(item.body || "") + '</p></article>';
+    })
     .join("");
 
   if (scene.kind === "title") {
-    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="hero-content"><h1 class="headline">' + text + '</h1><p class="lead">' + accent + '</p><div class="mini-strip"><span>Buy Side</span><span>Sell Side</span><span>Quant</span></div></div>' + pageChrome + '</article>';
+    return '<article class="frame enter"><div class="kicker" ' + stageStyle(scene, ms, 0, 520, 16) + '>' + escapeHtml(scene.label) + '</div><div class="hero-content"><h1 class="headline" ' + stageStyle(scene, ms, 180, 680, 30) + '>' + text + '</h1><p class="lead" ' + stageStyle(scene, ms, 620, 680, 26) + '>' + accent + '</p><div class="mini-strip" ' + stageStyle(scene, ms, 1080, 560, 18) + '><span>Buy Side</span><span>Sell Side</span><span>Quant</span></div></div>' + pageChrome + '</article>';
   }
 
   if (scene.kind === "tool") {
-    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content grid-content"><section class="feature-card"><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2>' + text + '</h2><p>' + accent + '</p></section><div class="card-grid">' + cards + '</div></div>' + pageChrome + '</article>';
+    const layout = cards ? '<div class="content grid-content">' + featureCard(scene, text, accent, ms, "") + '<div class="card-grid">' + cards + '</div></div>' : '<div class="content single-content">' + featureCard(scene, text, accent, ms, "wide") + '</div>';
+    return '<article class="frame enter"><div class="kicker" ' + stageStyle(scene, ms, 0, 520, 14) + '>' + escapeHtml(scene.label) + '</div>' + layout + pageChrome + '</article>';
   }
 
   if (scene.kind === "quote" || scene.kind === "summary") {
-    return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content split-content"><section class="feature-card wide"><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2>' + text + '</h2><p>' + accent + '</p></section><div class="side-note">' + cards + '</div></div>' + pageChrome + '</article>';
+    const layout = cards ? '<div class="content split-content">' + featureCard(scene, text, accent, ms, "wide") + '<div class="side-note">' + cards + '</div></div>' : '<div class="content single-content">' + featureCard(scene, text, accent, ms, "wide") + '</div>';
+    return '<article class="frame enter"><div class="kicker" ' + stageStyle(scene, ms, 0, 520, 14) + '>' + escapeHtml(scene.label) + '</div>' + layout + pageChrome + '</article>';
   }
 
-  return '<article class="frame enter"><div class="kicker">' + escapeHtml(scene.label) + '</div><div class="content grid-content"><section class="feature-card compact"><div class="card-num">' + String(scene.index).padStart(2, "0") + '</div><h2>' + text + '</h2><p>' + accent + '</p></section><div class="card-grid">' + cards + '</div></div>' + pageChrome + '</article>';
+  const layout = cards ? '<div class="content grid-content">' + featureCard(scene, text, accent, ms, "compact") + '<div class="card-grid">' + cards + '</div></div>' : '<div class="content single-content">' + featureCard(scene, text, accent, ms, "wide") + '</div>';
+  return '<article class="frame enter"><div class="kicker" ' + stageStyle(scene, ms, 0, 520, 14) + '>' + escapeHtml(scene.label) + '</div>' + layout + pageChrome + '</article>';
 }
 
 function tick(now) {

@@ -15,7 +15,7 @@
     "startMs": 18966,
     "endMs": 24400,
     "items": [
-      { "tag": "01", "title": "买方", "body": "用资金做投资", "revealMs": 18966 },
+      { "tag": "01", "title": "买方", "body": "用资金做投资", "revealMs": 19800 },
       { "tag": "02", "title": "卖方", "body": "为客户提供服务", "revealMs": 22033 }
     ]
   },
@@ -55,7 +55,7 @@
     "startMs": 65633,
     "endMs": 93233,
     "items": [
-      { "tag": "01", "title": "菜市场", "body": "把金融市场生活化", "revealMs": 66933 },
+      { "tag": "01", "title": "菜市场", "body": "把金融市场生活化", "revealMs": 67700 },
       { "tag": "02", "title": "买方", "body": "拿钱来买菜的人", "revealMs": 70900 },
       { "tag": "03", "title": "买得便宜", "body": "希望买到好菜", "revealMs": 73733 },
       { "tag": "04", "title": "卖方", "body": "摊贩和批发商", "revealMs": 79433 }
@@ -70,7 +70,7 @@
     "endMs": 118100,
     "items": [
       { "tag": "01", "title": "对冲基金", "body": "买方机构", "revealMs": 95400 },
-      { "tag": "02", "title": "资产管理", "body": "长期管理资产", "revealMs": 95400 },
+      { "tag": "02", "title": "资产管理", "body": "长期管理资产", "revealMs": 97300 },
       { "tag": "03", "title": "自营交易", "body": "用自己的钱交易", "revealMs": 99500 },
       { "tag": "04", "title": "做市商", "body": "持续报价提供流动性", "revealMs": 101000 }
     ]
@@ -81,130 +81,226 @@
     "kind": "quote",
     "label": "故事示例",
     "startMs": 118100,
-    "durationSec": 38,
+    "endMs": 149266,
     "items": [
       { "tag": "01", "title": "小李", "body": "刚工作，存了10万元", "revealMs": 120300 },
       { "tag": "02", "title": "券商 App", "body": "下单买股票", "revealMs": 124400 },
-      { "tag": "03", "title": "5 元佣金", "body": "卖方的收入", "revealMs": 128833 }
+      { "tag": "03", "title": "5 元佣金", "body": "卖方的收入", "revealMs": 128833 },
+      { "tag": "04", "title": "股票涨了", "body": "小李获得买方收益", "revealMs": 135833 }
     ]
   },
   {
     "title": "大型买方机构",
-    "body": "不是十万元，而是几亿、几十亿甚至几百亿资金",
+    "body": "不是十万元，而是几亿、几十亿，甚至几百亿资金",
     "kind": "step",
     "label": "规模差异",
-    "durationSec": 28
+    "startMs": 149266,
+    "endMs": 162100
   },
   {
     "title": "买方的核心逻辑",
     "body": "拿到资金，做研究和交易，让资金增值",
     "kind": "tool",
+    "label": "核心逻辑",
+    "startMs": 162100,
+    "endMs": 188600,
+    "items": [
+      { "tag": "01", "title": "拿到资金", "body": "养老金、保险、个人投资者", "revealMs": 164600 },
+      { "tag": "02", "title": "研究模型", "body": "判断投资机会", "revealMs": 175233 },
+      { "tag": "03", "title": "交易风控", "body": "执行交易并控制风险", "revealMs": 175900 },
+      { "tag": "04", "title": "资金增值", "body": "用投资结果赚钱", "revealMs": 181433 }
+    ]
+  },
+  {
+    "title": "投资工厂怎么运转？",
+    "body": "原料是资金，机器是模型和系统，产品是投资收益",
+    "kind": "tool",
     "label": "投资工厂",
-    "durationSec": 34
+    "startMs": 188600,
+    "endMs": 211200,
+    "items": [
+      { "tag": "01", "title": "原料", "body": "资金", "revealMs": 193333 },
+      { "tag": "02", "title": "机器", "body": "量化模型和交易系统", "revealMs": 196000 },
+      { "tag": "03", "title": "工人", "body": "研究员、交易员、开发者", "revealMs": 199666 },
+      { "tag": "04", "title": "产品", "body": "投资收益", "revealMs": 208533 }
+    ]
   },
   {
     "title": "什么是 Alpha",
     "body": "超过普通市场表现的那部分收益",
     "kind": "quote",
     "label": "关键词",
-    "durationSec": 24
+    "startMs": 211200,
+    "endMs": 215933
   },
   {
     "title": "买方用结果说话",
-    "body": "赚钱有管理费和提成，亏钱可能被赎回",
+    "body": "赚钱可以收费和分成，长期亏钱可能被赎回",
     "kind": "step",
     "label": "结果导向",
-    "durationSec": 34
-  },
-  {
-    "title": "A 公司与 B 公司",
-    "body": "风险管理决定机构能否穿越危机",
-    "kind": "quote",
-    "label": "危机故事",
-    "durationSec": 42
+    "startMs": 215933,
+    "endMs": 240066,
+    "items": [
+      { "tag": "01", "title": "赚钱", "body": "收管理费", "revealMs": 219600 },
+      { "tag": "02", "title": "利润", "body": "分走一部分投资收益", "revealMs": 221400 },
+      { "tag": "03", "title": "亏钱", "body": "客户可能赎回", "revealMs": 224333 },
+      { "tag": "04", "title": "硬道理", "body": "用投资结果说话", "revealMs": 231533 }
+    ]
   },
   {
     "title": "四类买方机构",
     "body": "对冲基金、资产管理、自营交易、做市商",
     "kind": "tool",
     "label": "分类总览",
-    "durationSec": 30
+    "startMs": 240066,
+    "endMs": 261100,
+    "items": [
+      { "tag": "01", "title": "对冲基金", "body": "寻找超额收益", "revealMs": 243866 },
+      { "tag": "02", "title": "资产管理", "body": "长期管理客户资产", "revealMs": 246866 },
+      { "tag": "03", "title": "自营交易", "body": "用自己的钱交易", "revealMs": 249200 },
+      { "tag": "04", "title": "做市商", "body": "持续报价提供流动性", "revealMs": 251633 }
+    ]
   },
   {
     "title": "对冲基金",
     "body": "像特种部队，目标是寻找超额收益",
     "kind": "step",
     "label": "类型 01",
-    "durationSec": 24
+    "startMs": 261100,
+    "endMs": 280666,
+    "items": [
+      { "tag": "01", "title": "特种部队", "body": "策略更灵活", "revealMs": 264200 },
+      { "tag": "02", "title": "多种策略", "body": "做多、做空、套利、量化", "revealMs": 267033 },
+      { "tag": "03", "title": "目标", "body": "赚取 alpha", "revealMs": 273933 }
+    ]
   },
   {
     "title": "资产管理公司",
     "body": "像马拉松选手，长期稳健管理客户资产",
     "kind": "step",
     "label": "类型 02",
-    "durationSec": 24
+    "startMs": 280666,
+    "endMs": 304100,
+    "items": [
+      { "tag": "01", "title": "马拉松选手", "body": "长期稳定", "revealMs": 283233 },
+      { "tag": "02", "title": "客户资产", "body": "养老金、指数基金、共同基金", "revealMs": 292066 },
+      { "tag": "03", "title": "控制风险", "body": "争取长期跑赢基准", "revealMs": 299266 }
+    ]
   },
   {
     "title": "自营交易公司",
     "body": "用自己的钱交易，靠概率、速度和纪律赚钱",
     "kind": "step",
     "label": "类型 03",
-    "durationSec": 24
+    "startMs": 304100,
+    "endMs": 328666,
+    "items": [
+      { "tag": "01", "title": "自有资金", "body": "主要用自己的钱交易", "revealMs": 309466 },
+      { "tag": "02", "title": "交易利润", "body": "靠自己的策略赚钱", "revealMs": 314866 },
+      { "tag": "03", "title": "核心能力", "body": "速度、概率、算法、系统", "revealMs": 317833 }
+    ]
   },
   {
     "title": "做市商",
     "body": "持续报买价和卖价，赚每一笔微小价差",
     "kind": "step",
     "label": "类型 04",
-    "durationSec": 26
+    "startMs": 328666,
+    "endMs": 350333,
+    "items": [
+      { "tag": "01", "title": "固定摊贩", "body": "随时提供交易", "revealMs": 330866 },
+      { "tag": "02", "title": "买价和卖价", "body": "同时报价", "revealMs": 334266 },
+      { "tag": "03", "title": "微小价差", "body": "靠巨大交易量累积收益", "revealMs": 339666 }
+    ]
   },
   {
     "title": "为什么量化集中在买方？",
     "body": "投资决策越来越依赖数据、模型和编程",
     "kind": "quote",
     "label": "核心原因",
-    "durationSec": 36
+    "startMs": 350333,
+    "endMs": 375700,
+    "items": [
+      { "tag": "01", "title": "投资决策", "body": "买方的核心任务", "revealMs": 359233 },
+      { "tag": "02", "title": "数据", "body": "价格、财报、新闻、另类数据", "revealMs": 365300 },
+      { "tag": "03", "title": "模型", "body": "数学和统计判断机会", "revealMs": 368000 },
+      { "tag": "04", "title": "编程", "body": "把策略跑起来", "revealMs": 369833 }
+    ]
   },
   {
     "title": "买方量化岗位",
     "body": "研究、开发、交易、风控、数据科学",
     "kind": "tool",
     "label": "岗位地图",
-    "durationSec": 34
+    "startMs": 375700,
+    "endMs": 410033,
+    "items": [
+      { "tag": "01", "title": "量化研究员", "body": "研究 alpha 信号", "revealMs": 379733 },
+      { "tag": "02", "title": "量化开发", "body": "搭建回测和交易系统", "revealMs": 385266 },
+      { "tag": "03", "title": "量化交易员", "body": "执行策略，管理实时风险", "revealMs": 390700 },
+      { "tag": "04", "title": "风控 / 数据", "body": "监控风险，挖掘另类数据", "revealMs": 395033 }
+    ]
   },
   {
     "title": "卖方也有量化",
-    "body": "但更多服务定价、建模、融资和客户风险分析",
+    "body": "但更多服务定价、建模和客户风险分析",
     "kind": "step",
     "label": "对比理解",
-    "durationSec": 30
+    "startMs": 410033,
+    "endMs": 434933,
+    "items": [
+      { "tag": "01", "title": "卖方量化", "body": "帮客户定价、建模、分析风险", "revealMs": 414933 },
+      { "tag": "02", "title": "投行场景", "body": "复杂衍生品定价", "revealMs": 419100 },
+      { "tag": "03", "title": "买方量化", "body": "为资金创造投资收益", "revealMs": 423500 }
+    ]
   },
   {
     "title": "两个量化分析师",
     "body": "都用数学和编程，但目标和收入来源不同",
     "kind": "quote",
     "label": "对话示例",
-    "durationSec": 34
+    "startMs": 434933,
+    "endMs": 464266,
+    "items": [
+      { "tag": "01", "title": "小张", "body": "投行里帮客户算期权价格", "revealMs": 438466 },
+      { "tag": "02", "title": "咨询费", "body": "卖方服务收入", "revealMs": 445533 },
+      { "tag": "03", "title": "小王", "body": "对冲基金里研究 alpha 因子", "revealMs": 447633 },
+      { "tag": "04", "title": "策略收益", "body": "买方投资结果", "revealMs": 452933 }
+    ]
   },
   {
     "title": "本章记住四件事",
     "body": "买方投资，卖方服务；买方结果导向；四类机构；量化依赖数据模型代码",
     "kind": "summary",
     "label": "总结提升",
-    "durationSec": 44
+    "startMs": 464266,
+    "endMs": 499500,
+    "items": [
+      { "tag": "01", "title": "买方投资", "body": "卖方服务", "revealMs": 467066 },
+      { "tag": "02", "title": "赚钱方式", "body": "投资结果 vs 服务收费", "revealMs": 474066 },
+      { "tag": "03", "title": "四类机构", "body": "对冲、资管、自营、做市", "revealMs": 481733 },
+      { "tag": "04", "title": "量化能力", "body": "数据、模型和编程", "revealMs": 491000 }
+    ]
   },
   {
     "title": "课后思考",
     "body": "稳定跑赢、买方公司、AI 对量化岗位的影响",
     "kind": "summary",
     "label": "思考题",
-    "durationSec": 28
+    "startMs": 499500,
+    "endMs": 535500,
+    "items": [
+      { "tag": "01", "title": "养老基金", "body": "稳定跑赢，还是高收益高回撤？", "revealMs": 501800 },
+      { "tag": "02", "title": "买方公司", "body": "找一家机构看业务", "revealMs": 514466 },
+      { "tag": "03", "title": "未来 10 年", "body": "量化更重要，还是被 AI 替代？", "revealMs": 525133 }
+    ]
   },
   {
     "title": "下一章：对冲基金",
     "body": "它们如何用不同策略猎取 alpha",
     "kind": "summary",
     "label": "下章预告",
-    "durationSec": 20
+    "startMs": 535500,
+    "endMs": 552300
   }
 ]

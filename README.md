@@ -14,6 +14,12 @@
 docs/lesson-to-narration-workflow.md
 ```
 
+PPT 动画质量规范见：
+
+```text
+docs/ppt-animation-quality-guide.md
+```
+
 ## 环境要求
 
 - Node.js 18+
@@ -107,6 +113,7 @@ lessons/chapter1-buy-side-vs-sell-side/voice.mp3
 
 ```bash
 npm run lesson:activate -- chapter1-buy-side-vs-sell-side
+npm run lesson:check-scenes -- chapter1-buy-side-vs-sell-side
 npm run render
 ```
 
@@ -147,6 +154,21 @@ input/
 lessons/{lesson-slug}/scenes.json
 ```
 
+`scenes.json` 负责画面结构和动画节奏。推荐做法是先让每页只显示一个主视觉或主标题，然后把右侧卡片、流程节点、对比项写进 `items`，并用 `revealMs` 按口播关键词逐个出现。
+
+关键原则：
+
+- 不要一开页就把所有信息铺满。
+- 主卡先出现，解释文字稍后出现。
+- 每个 `items[]` 只讲一个小点。
+- `revealMs` 使用整条音频中的绝对毫秒时间，而不是相对本页时间。
+- 例如旁白说到“提供交易”时，再弹出“提供交易”卡片；说到“融资”时，再弹出“融资”卡片。
+- 有了 SRT 之后，正式 `scenes.json` 必须使用真实 `startMs/endMs`，不要继续依赖 `durationSec` 估算整页时长。
+- 如果口播中没有某一页内容，就不要保留那一页，避免后半段画面错位。
+- 没有明确 `items` 的页面会按单主卡展示，不会自动硬拆成 `01/02/03`。
+- 正式视频先检查前 1-2 分钟预览，确认节奏是“逐步呈现信息”，再渲染完整视频。
+- 更完整的制作规范见 `docs/ppt-animation-quality-guide.md`。
+
 示例：
 
 ```json
@@ -157,6 +179,20 @@ lessons/{lesson-slug}/scenes.json
     "kind": "title",
     "label": "导入问题",
     "durationSec": 24
+  },
+  {
+    "title": "卖方 Sell Side",
+    "body": "提供交易、融资、研究、报价等服务",
+    "kind": "step",
+    "label": "概念 02",
+    "startMs": 42933,
+    "endMs": 65633,
+    "items": [
+      { "tag": "01", "title": "提供交易", "body": "帮客户完成买卖", "revealMs": 52800 },
+      { "tag": "02", "title": "融资", "body": "帮公司找钱", "revealMs": 54700 },
+      { "tag": "03", "title": "研究", "body": "写研究报告", "revealMs": 55400 },
+      { "tag": "04", "title": "报价", "body": "提供买卖价格", "revealMs": 57266 }
+    ]
   }
 ]
 ```
@@ -170,6 +206,12 @@ npm run build:html
 ```
 
 读取 `input/subtitles.srt` 和 `input/style.json`，生成 `output/current/preview.html`。
+
+```bash
+npm run lesson:check-scenes -- chapter-name
+```
+
+检查 `lessons/chapter-name/scenes.json` 是否存在时间轴漂移、卡片过长、单项硬编号、`revealMs` 超出页面范围等问题。
 
 ```bash
 npm run render
